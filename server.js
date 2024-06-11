@@ -10,6 +10,8 @@ const dotenv = require('dotenv').config()
 // Internal dependencies start here
 
 const userRoutes = require('./routers/user/user.routes')
+const hotelRoutes = require('./routers/hotels/hotel.routes')
+const hotelReservedRoutes = require('./routers/hotels/hotel.reserved.routes')
 const globalRoutes = require('./routers/global.routes')
 const { PORT } = process.env
 
@@ -29,6 +31,8 @@ app.use(helmet())
 
 // Route mappings start here
 
+app.use('/hotels', hotelRoutes)
+app.use('/super/hotels', hotelReservedRoutes)
 app.use('/users', userRoutes)
 app.use(globalRoutes)
 

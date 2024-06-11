@@ -1,7 +1,6 @@
 // External dependencies start here
 
 const router = require('express').Router()
-const { log, error } = require('console')
 
 // External dependencies end here
 
@@ -17,9 +16,9 @@ const User = require('../../models/user.class')
 // Create user starts here
 router.post('/', async (req, res) => {
     const data = req.body
-    log('create user invoked!', data)
+    console.log('create user invoked!', data)
     const saved = await User.save({ data }).catch(e => e)
-    log('saved', saved)
+    console.log('saved', saved)
     res.json(saved)
 })
 // Create user end here
