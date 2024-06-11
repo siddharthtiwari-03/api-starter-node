@@ -6,7 +6,7 @@ This is a starter kit to speedup your initial setup time and provide a well stru
 
 - Node JS installed
 - VS Code (Or any of your other favourite code editors)
-- MySQL Database with at least one table inside it
+- MySQL Database with at least one table inside it (you may use schema provided inside utils)
 
 ### Setup
 
