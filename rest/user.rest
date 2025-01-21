@@ -1,0 +1,11 @@
+@rootURL = http://localhost:5500
+
+POST {{rootURL}}/users/login HTTP/1.1
+Content-Type: application/json
+
+{
+    "loginID": "sid@de.com",
+    "password": "123"
+}
+
+###
