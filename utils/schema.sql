@@ -15,4 +15,4 @@ lastUpdatedOn timestamp default current_timestamp on update current_timestamp,
 status tinyint(1) default 1
 );
 
-insert into test_users (`firstName`,`email`,`password`) values ('Sid','user@test.com','$2b$10$l6MPKVUR0sC/dQv.xKsx9ulwNoaN8xTlaEBGM6OoOO3TgTZ8xkhoW');
+insert into test_users (`fname`,`userEmail`,`userPpass`) values ('Sid','user@test.com','$2b$10$l6MPKVUR0sC/dQv.xKsx9ulwNoaN8xTlaEBGM6OoOO3TgTZ8xkhoW');

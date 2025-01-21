@@ -7,7 +7,15 @@ const firebaseCreds = require('../utils/nitecapp-application-firebase-adminsdk-r
 
 const fcmApp = initializeApp({ credential: credential.cert(firebaseCreds) })
 
-
+/**
+ * Sends push notifications to user devices using 
+ * @function pushFCM
+ * @description This function will send push notifications to both Android and iOs apps using Google's Firebase Cloud Messaging (FCM)
+ * 
+ * @param {*} payLoad push notification to be sent to the user device
+ * 
+ * @returns {{success:boolean, result?:*, error?:* }}
+ */
 const pushFCM = async (payLoad) => {
     
     try {

@@ -1,6 +1,6 @@
 {
   "name": "api-starter-node-docker",
-  "version": "2.0.0",
+  "version": "2.6.1",
   "description": "Quick starter kit for API building with docker and compose",
   "main": "server.js",
   "scripts": {
@@ -37,7 +37,7 @@
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
-    "express": "^4.19.2",
+    "express": "^4.21.2",
     "express-rate-limit": "^7.5.0",
     "firebase-admin": "^13.0.2",
     "helmet": "^7.1.0",

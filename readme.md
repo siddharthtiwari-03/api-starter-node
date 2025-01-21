@@ -10,10 +10,10 @@ This is a starter kit to speedup your initial setup time and provide a well stru
 
 ### Setup
 
-- Create a **.env** file inside the **root** directory
-- Create a **.env.dev** file inside the **root** directory (for development environments)
-- Create a **.env.prod** file inside the **root** directory (for production environments)
-- Create a **.env.stage** file inside the **root** directory (for staging environments)
+- Create a **.env** file inside the **root** directory, this file holds common configurations for all stages of application (mandatory for all environments)
+- Create a **.env.dev** file inside the **root** directory (relating to development environments)
+- Create a **.env.prod** file inside the **root** directory (relating to production environments)
+- Create a **.env.stage** file inside the **root** directory (relating to staging environments)
 - Provide entries mandatory to connect with the database
 
 

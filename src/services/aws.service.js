@@ -3,6 +3,7 @@ const { SQSClient } = require('@aws-sdk/client-sqs')
 const { SNSClient } = require('@aws-sdk/client-sns')
 const { envs } = require("./environment.helper")
 
+// generates AWS client for S3
 const s3Client = new S3Client({
     region: envs.aws.s3.region,
     credentials: {
@@ -11,6 +12,7 @@ const s3Client = new S3Client({
     }
 })
 
+// generates AWS client for SQS
 const sqsClient = new SQSClient({
     region: envs.aws_sqs_region,
     credentials: {
@@ -19,6 +21,7 @@ const sqsClient = new SQSClient({
     }
 })
 
+// generates AWS client for SNS
 const snsClient = new SNSClient({
     region: AWS_SNS_REGION,
     credentials: {

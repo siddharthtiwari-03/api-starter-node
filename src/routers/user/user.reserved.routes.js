@@ -6,7 +6,7 @@ const router = require('express').Router()
 
 // Internal dependencies start here
 
-const User = require('../../models/user.class')
+const { User } = require('../../models/user.class')
 
 // Internal dependencies end here
 

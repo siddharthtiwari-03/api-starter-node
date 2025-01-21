@@ -2,13 +2,13 @@ const envs = Object.freeze({
     port: process.env.PORT,
     use_cluster_module: process.env.USE_CLUSTER_MODULE,
 
-    // DB Creds
+    // DB Credentials
     db: {
         host: process.env.DB_HOST,
         user: process.env.DB_USER,
         pass: process.env.DB_PASS,
         name: process.env.DB_NAME,
-        connection_pool_limit: process.env.DB_CONNECTION_POOL_LIMIT,
+        connection_limit: process.env.DB_CONNECTION_LIMIT,
         //port: process.env.DB_PORT, // (Optional)
     },
 
@@ -17,8 +17,7 @@ const envs = Object.freeze({
         user: process.env.DB_TABLE_USERS
     },
 
-
-    // AWS Creds
+    // AWS Credentials
     aws: {
         s3: {
             region: process.env.AWS_REGION,

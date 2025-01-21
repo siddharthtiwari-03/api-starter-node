@@ -7,7 +7,7 @@ const bcrypt = require('bcrypt')
 
 // Internal dependencies start here
 
-const User = require('../../models/user.class')
+const { User } = require('../../models/user.class')
 
 // Internal dependencies end here
 
@@ -22,10 +22,12 @@ router.post('/login', async (req, res) => {
     console.log('user login invoked', loginID, password)
 
     // limit query data
-    const select = 'userID, fname, lname, userPass, userStatus'
+    const select = ['userID', 'fname', 'lname', 'userPass', 'userStatus']
 
     // create conditions to search DB
     const where = [['userEmail', '=', `'${loginID}'`]]
+    // const where = { userEmail: '#' + loginID }
+
 
     // execute query
     const found = await User.find({ select, where }).catch(e => e)

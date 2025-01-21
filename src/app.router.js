@@ -1,7 +1,3 @@
-/**
- * @module appRouter
- */
-
 const router = require('express').Router({ mergeParams: true })
 
 // Internal dependencies start here

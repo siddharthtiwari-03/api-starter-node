@@ -6,6 +6,8 @@ const helmet = require('helmet')
 const compression = require('compression')
 require('dotenv').config()
 
+// Include env files depending on the 'MODE'
+
 if (process.env.MODE === 'dev')
     require('dotenv').config({ path: ['.env.dev'] })
 else if (process.env.MODE === 'prod')
