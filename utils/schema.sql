@@ -6,21 +6,13 @@ USE test_db;
 
 CREATE TABLE test_users(
 userID int not null primary key auto_increment,
-firstName varchar(255) not null,
-lastName varchar(255) default null,
-email varchar(255) not null,
-password varchar(255) not null,
+fname varchar(255) not null,
+lname varchar(255) default null,
+userEmail varchar(255) not null,
+userPass varchar(255) not null,
+createdOn timestamp default current_timestamp,
+lastUpdatedOn timestamp default current_timestamp on update current_timestamp,
 status tinyint(1) default 1
 );
 
-insert into test_users (`firstName`,`email`,`password`) values ('Sid','user@test.com','123');
-
-CREATE TABLE test_hotels(
-hotelID int not null primary key auto_increment,
-hotelName varchar(255) not null,
-email varchar(255) default null,
-password varchar(255) not null,
-status tinyint(1) default 1
-);
-
-insert into test_hotels (`hotelName`,`email`,`password`) values ('Teset Hotel','hotel@test.com','123');
+insert into test_users (`firstName`,`email`,`password`) values ('Sid','user@test.com','$2b$10$l6MPKVUR0sC/dQv.xKsx9ulwNoaN8xTlaEBGM6OoOO3TgTZ8xkhoW');

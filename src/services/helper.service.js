@@ -1,6 +1,4 @@
-/**
- * @module
- */
+const { envs } = require("./environment.helper")
 
 /**
  * Helps skip a middleware for any matching routes
@@ -138,5 +136,14 @@ const prettifyError = e => ({ success: false, error: e?.error?.sqlMessage || e?.
  * @author Siddharth Tiwari
  */
 const patchInline = (condition, patchValue, elseValue = '') => (condition && condition != undefined) ? patchValue : elseValue
+
+const addPresignedURL = async (obj, columnName = 'coverURL', signedName = 'signedURL') => {
+    if (!obj) return
+    if (obj[columnName]) {
+        const presigner = await generateURL_GET({ Key: obj[columnName] })
+        if (presigner.success) obj[signedName] = presigner.signedURL
+        obj['cdn_' + columnName] = encodeURI(envs.aws.cloudfront.cdn_url + obj[columnName])
+    }
+}
 
 module.exports = {skipFor, generateCode, applyPagination, matchRegex,matchParamRegex, prettifyError, patchInline}

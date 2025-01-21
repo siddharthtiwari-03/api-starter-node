@@ -1,16 +1,19 @@
 # API starter kit: Node JS
 
-This is a starter kit to speedup your initial setup time and provide a well structured backend for the better code readability and managability.
+This is a starter kit to speedup your initial setup time and provide a well structured backend for the better code readability and manageability.
 
 ## Prerequisites
 
 - Node JS installed
-- VS Code (Or any of your other favourite code editors)
+- VS Code (Or any of your other favorite code editors)
 - MySQL Database with at least one table inside it (you may use schema provided inside utils)
 
 ### Setup
 
 - Create a **.env** file inside the **root** directory
+- Create a **.env.dev** file inside the **root** directory (for development environments)
+- Create a **.env.prod** file inside the **root** directory (for production environments)
+- Create a **.env.stage** file inside the **root** directory (for staging environments)
 - Provide entries mandatory to connect with the database
 
 
