@@ -137,13 +137,25 @@ const prettifyError = e => ({ success: false, error: e?.error?.sqlMessage || e?.
  */
 const patchInline = (condition, patchValue, elseValue = '') => (condition && condition != undefined) ? patchValue : elseValue
 
+/**
+ * patches presigned URLs for files in AWS S3 bucket
+ * @param {*} obj object into which the URLs need to be patched into
+ * 
+ * @param {*} columnName name of the column that represents AWS S3 bucket key
+ * 
+ * @param {*} signedName name provided to the generated signed URL, default is 'signedURL'
+ * 
+ * @returns {*} original object with patched signed URL + Cloudfront CDN URL
+ * 
+ * @author Siddharth Tiwari
+ */
 const addPresignedURL = async (obj, columnName = 'coverURL', signedName = 'signedURL') => {
     if (!obj) return
     if (obj[columnName]) {
         const presigner = await generateURL_GET({ Key: obj[columnName] })
         if (presigner.success) obj[signedName] = presigner.signedURL
-        obj['cdn_' + columnName] = encodeURI(envs.aws.cloudfront.cdn_url + obj[columnName])
+        if(envs?.aws?.cloudfront?.cdn_url) obj['cdn_' + columnName] = encodeURI(envs.aws.cloudfront.cdn_url + obj[columnName])
     }
 }
 
-module.exports = {skipFor, generateCode, applyPagination, matchRegex,matchParamRegex, prettifyError, patchInline}
+module.exports = { skipFor, generateCode, applyPagination, matchRegex, matchParamRegex, prettifyError, patchInline, addPresignedURL }
