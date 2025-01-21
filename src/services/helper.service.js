@@ -1,3 +1,4 @@
+const { generateURL_GET } = require("./aws-s3.service")
 const { envs } = require("./environment.helper")
 
 /**
