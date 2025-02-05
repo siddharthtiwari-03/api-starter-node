@@ -1,6 +1,6 @@
 const UnSQL = require('unsql')
 const pool = require('../services/db.service')
-const { envs } = require('../services/environment.helper')
+const { envs } = require('../services/environment.service')
 
 class User extends UnSQL {
 

@@ -1,5 +1,5 @@
 const mysql = require('mysql2/promise')
-const { envs } = require('./environment.helper')
+const { envs } = require('./environment.service')
 
 const pool = mysql.createPool({
     host: envs.db.host,

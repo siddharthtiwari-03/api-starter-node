@@ -23,7 +23,7 @@ const cluster = require('cluster')
 // Internal dependencies start here
 
 const appRouter = require('./app.router')
-const { envs } = require('./services/environment.helper')
+const { envs } = require('./services/environment.service')
 
 // Internal dependencies end here
 
@@ -55,23 +55,20 @@ app.use(appRouter)
 if (envs.use_cluster_module === 'true' && cluster.isPrimary) {
     console.log('number of cores available:', numOfCores)
 
-    // for (let i = 0; i <= numOfCores; i++) {
-    for (let i = 0; i <= 1; i++) {
+    for (let i = 0; i <= numOfCores; i++) {
         const worker = cluster.fork()
         worker.on('exit', (code, signal) => {
             if (signal) {
-                console.log(`worker was killed by signal: ${signal}`)
+                console.warn(`worker was killed by signal: ${signal}`)
             } else if (code !== 0) {
-                console.log(`worker exited with error code: ${code}`)
+                console.warn(`worker exited with error code: ${code}`)
             } else {
-                console.log('worker success!')
+                console.info('worker exited!')
             }
         })
     }
 } else {
-    app.listen(envs.port, () => console.log(`Server cluster started inside src, listening at: ${envs.port}`))
+    app.listen(envs.port, () => console.log(`Server cluster started, listening at: ${envs.port}`))
 }
-
-// app.listen(envs.port, () => console.log(`Server started inside src, listening at: ${envs.port}`))
 
 // server instantiation ends here
