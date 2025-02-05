@@ -1,5 +1,5 @@
 const { generateURL_GET } = require("./aws-s3.service")
-const { envs } = require("./environment.helper")
+const { envs } = require("./environment.service")
 
 /**
  * Helps skip a middleware for any matching routes
@@ -155,7 +155,7 @@ const addPresignedURL = async (obj, columnName = 'coverURL', signedName = 'signe
     if (obj[columnName]) {
         const presigner = await generateURL_GET({ Key: obj[columnName] })
         if (presigner.success) obj[signedName] = presigner.signedURL
-        if(envs?.aws?.cloudfront?.cdn_url) obj['cdn_' + columnName] = encodeURI(envs.aws.cloudfront.cdn_url + obj[columnName])
+        if (envs?.aws?.cloudfront?.cdn_url && !columnName.includes('http')) obj['cdn_' + columnName] = encodeURI(envs.aws.cloudfront.cdn_url + obj[columnName])
     }
 }
 

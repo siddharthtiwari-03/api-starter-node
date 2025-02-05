@@ -1,7 +1,7 @@
 const { S3Client } = require("@aws-sdk/client-s3")
 const { SQSClient } = require('@aws-sdk/client-sqs')
 const { SNSClient } = require('@aws-sdk/client-sns')
-const { envs } = require("./environment.helper")
+const { envs } = require("./environment.service")
 
 // generates AWS client for S3
 const s3Client = new S3Client({

@@ -3,7 +3,7 @@
 const { PutObjectCommand, GetObjectCommand } = require("@aws-sdk/client-s3")
 const { s3Client } = require("./aws.service")
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner")
-const { envs } = require("./environment.helper")
+const { envs } = require("./environment.service")
 
 // External dependencies end here
 
