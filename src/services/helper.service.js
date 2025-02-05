@@ -152,10 +152,10 @@ const patchInline = (condition, patchValue, elseValue = '') => (condition && con
  */
 const addPresignedURL = async (obj, columnName = 'coverURL', signedName = 'signedURL') => {
     if (!obj) return
-    if (obj[columnName]) {
+    if (obj[columnName] && !obj[columnName].includes('http')) {
         const presigner = await generateURL_GET({ Key: obj[columnName] })
         if (presigner.success) obj[signedName] = presigner.signedURL
-        if (envs?.aws?.cloudfront?.cdn_url && !columnName.includes('http')) obj['cdn_' + columnName] = encodeURI(envs.aws.cloudfront.cdn_url + obj[columnName])
+        if (envs?.aws?.cloudfront?.cdn_url) obj['cdn_' + columnName] = encodeURI(envs.aws.cloudfront.cdn_url + obj[columnName])
     }
 }
 
