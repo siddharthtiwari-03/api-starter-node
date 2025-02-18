@@ -1,4 +1,4 @@
-const router = require('express').Router()
+const router = require('express').Router({ mergeParams: true })
 
 router.get('/', (req, res) => res.status(200).send('API working perfectly!'))
 

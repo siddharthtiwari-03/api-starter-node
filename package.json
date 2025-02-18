@@ -1,6 +1,6 @@
 {
   "name": "api-starter-node-docker",
-  "version": "2.6.2",
+  "version": "2.7.0",
   "description": "Quick starter kit for API building with docker and compose",
   "main": "server.js",
   "scripts": {
@@ -43,7 +43,7 @@
     "helmet": "^7.1.0",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.12.0",
-    "unsql": "^1.6.27"
+    "unsql": "^2.0.0"
   },
   "devDependencies": {
     "javascript-obfuscator": "^4.1.1",

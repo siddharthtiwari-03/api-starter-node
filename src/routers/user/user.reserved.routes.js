@@ -1,6 +1,6 @@
 // External dependencies start here
 
-const router = require('express').Router()
+const router = require('express').Router({ mergeParams: true })
 
 // External dependencies end here
 

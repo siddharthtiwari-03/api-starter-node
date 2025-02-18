@@ -69,6 +69,8 @@ router.post('/login', async (req, res) => {
     const access_token = ''
     const refresh_token = ''
 
+    res.appendHeader('x-refresh-token', refresh_token)
+
     // send response with token and limited user data
     res.status(200).json({ success: true, access_token, account: user })
 })
