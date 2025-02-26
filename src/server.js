@@ -1,19 +1,20 @@
 // External dependencies start here
+require('dotenv').config()
+
+// Include env files depending on the 'ENV_MODE'
+
+if (process.env.ENV_MODE === 'dev')
+    require('dotenv').config({ path: ['.env.dev'] })
+else if (process.env.ENV_MODE === 'prod')
+    require('dotenv').config({ path: ['.env.prod'] })
+else if (process.env.ENV_MODE === 'stage')
+    require('dotenv').config({ path: ['.env.stage'] })
+
 
 const express = require('express')
 const cors = require('cors')
 const helmet = require('helmet')
 const compression = require('compression')
-require('dotenv').config()
-
-// Include env files depending on the 'MODE'
-
-if (process.env.MODE === 'dev')
-    require('dotenv').config({ path: ['.env.dev'] })
-else if (process.env.MODE === 'prod')
-    require('dotenv').config({ path: ['.env.prod'] })
-else if (process.env.MODE === 'stage')
-    require('dotenv').config({ path: ['.env.stage'] })
 
 const os = require('os')
 const cluster = require('cluster')
@@ -24,30 +25,11 @@ const cluster = require('cluster')
 
 const appRouter = require('./app.router')
 const { envs } = require('./services/environment.service')
+const numOfCores = os.availableParallelism()
+const whiteListedDomains = ['http://localhost:' + envs.port, '*']
 
 // Internal dependencies end here
 
-// App Initializations here
-const app = express()
-const whiteListedDomains = ['http://localhost:' + envs.port, '*']
-const numOfCores = os.availableParallelism()
-
-// Middlewares start here
-
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
-app.use(cors({ origin: whiteListedDomains, credentials: true }))
-app.options('*', cors())
-app.use(helmet())
-app.use(compression())
-
-// Middlewares end here
-
-// Route mappings start here
-
-app.use(appRouter)
-
-// Route mappings end here
 
 // server instantiation starts here
 
@@ -55,7 +37,7 @@ app.use(appRouter)
 if (envs.use_cluster_module === 'true' && cluster.isPrimary) {
     console.log('number of cores available:', numOfCores)
 
-    for (let i = 0; i <= numOfCores; i++) {
+    for (let i = 0; i < numOfCores; i++) {
         const worker = cluster.fork()
         worker.on('exit', (code, signal) => {
             if (signal) {
@@ -67,8 +49,60 @@ if (envs.use_cluster_module === 'true' && cluster.isPrimary) {
             }
         })
     }
+    // Graceful shutdown for the master (Add here)
+    process.on('SIGTERM', () => {
+        console.log(`Master ${process.pid} received SIGTERM, shutting down...`)
+        for (const id in cluster.workers) {
+            cluster.workers[id].kill()
+        }
+        process.exit(0)
+    })
+
 } else {
-    app.listen(envs.port, () => console.log(`Server cluster started, listening at: ${envs.port}`))
+    // App Initializations here
+    const app = express()
+
+    // Middlewares start here
+
+    app.use(express.json())
+    app.use(express.urlencoded({ extended: true }))
+    app.use(cors({ origin: allowedOrigins, credentials: true })) // Improved CORS
+    app.options('*', cors())
+    app.use(helmet())
+    app.use(compression())
+
+    // Middlewares end here
+
+    // Route mappings start here
+    app.use(appRouter)
+    // Route mappings end here
+
+    // Error handling middleware (Place here, before route mapping)
+    app.use((err, req, res, next) => {
+        console.error(err.stack)
+        res.status(500).send('Something broke!')
+    })
+
+    app.listen(envs.port, () => console.info(`Server cluster started, listening at: ${envs.port}`))
+
+    // Graceful shutdown for the worker (Add here)
+    process.on('SIGTERM', () => {
+        console.log(`Worker ${process.pid} received SIGTERM, shutting down...`)
+        // Add server close logic here, if needed
+        process.exit(0)
+    })
 }
 
 // server instantiation ends here
+
+// Global Error Handlers (Place at the very end of the file)
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection at:', promise, 'reason:', reason)
+    // Add logging or other specific handling here
+})
+
+process.on('uncaughtException', (err) => {
+    console.error('Uncaught Exception:', err)
+    // Add logging or other specific handling here
+    process.exit(1)
+})
