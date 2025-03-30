@@ -17,15 +17,10 @@ const Bucket = envs.aws.s3.bucket_name
  * Generates URL to PUT Media in S3 bucket
  * @function generateURL_PUT
  * @description This function is used to generate dynamic pre-signed URL to 'PUT' any object (with pre-defined 'ContentType') inside AWS S3 bucket using 'Key'
- * 
  * @param {object} putParam
- * 
  * @param {string} putParam.ContentType defines the mime type of the file that needs to be uploaded
- * 
  * @param {string} putParam.Key is an important unique identifier used by AWS S3 bucket to define the path where the file will be stored and accessed
- * 
  * @returns {string} dynamically generated pre-signed URL
- * 
  * @author Siddharth Tiwari
  */
 const generateURL_PUT = async ({ ContentType, Key }) => {
@@ -47,13 +42,9 @@ const generateURL_PUT = async ({ ContentType, Key }) => {
  * Generates URL to 'GET' Media in S3 bucket
  * @function generateURL_GET
  * @description This function is used to generate dynamic pre-signed URL to 'GET' any object stored inside AWS S3 bucket using 'Key'
- * 
  * @param {object} getParam
- * 
  * @param {string} getParam.Key unique identifier used by AWS S3 bucket to locate the file
- * 
  * @returns {string} dynamically generated pre-signed URL
- * 
  * @author Siddharth Tiwari
  */
 const generateURL_GET = async ({ Key }) => {

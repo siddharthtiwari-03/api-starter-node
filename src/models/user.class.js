@@ -20,7 +20,8 @@ class User extends UnSQL {
         table: envs.tables.user || '', // (mandatory) replace this with your table name
         pool, // replace 'pool' with 'connection' if you wish to use single connection instead of connection pool
         safeMode: true,
-        devMode: false
+        devMode: false,
+        dialect: 'mysql'
     }
 
 }

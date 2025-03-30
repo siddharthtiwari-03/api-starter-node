@@ -17,7 +17,7 @@ const { User } = require('../../models/user.class')
 router.post('/', async (req, res) => {
     const data = req.body
     console.log('create user invoked!', data)
-    const saved = await User.save({ data }).catch(e => e)
+    const saved = await User.save({ data })
     console.log('saved', saved)
     res.json(saved)
 })

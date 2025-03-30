@@ -8,6 +8,7 @@ const bcrypt = require('bcrypt')
 // Internal dependencies start here
 
 const { User } = require('../../models/user.class')
+const { prettifyError } = require('../../services/helper.service')
 
 // Internal dependencies end here
 
@@ -25,12 +26,12 @@ router.post('/login', async (req, res) => {
     const select = ['userID', 'fname', 'lname', 'userPass', 'userStatus']
 
     // create conditions to search DB
-    const where = [['userEmail', '=', `'${loginID}'`]]
+    const where = { userEmail: `#${loginID}` }
     // const where = { userEmail: '#' + loginID }
 
 
     // execute query
-    const found = await User.find({ select, where }).catch(e => e)
+    const found = await User.find({ select, where })
 
     console.log('user found', found)
 
@@ -38,7 +39,7 @@ router.post('/login', async (req, res) => {
         // catch generic errors or client induced errors
         case !found.success: {
             console.error('error while finding user', found)
-            return res.status(400).json(found)
+            return res.status(400).json(prettifyError(found))
         }
 
         // check login ID is valid
