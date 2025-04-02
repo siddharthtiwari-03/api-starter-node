@@ -5,7 +5,7 @@
  * @readonly
  */
 const envs = Object.freeze({
-    port: process.env.PORT,
+    port: process.env.PORT || 5800,
     use_cluster_module: process.env.USE_CLUSTER_MODULE,
 
     // DB Credentials

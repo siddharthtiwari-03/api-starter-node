@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./src/server.js",
     "dev": "nodemon -L ./src/server.js",
-    "enc": "javascript-obfuscator ./src --output ./dist --compact true --self-defending true --target node --identifier-names-generator hexadecimal --string-array-encoding rc4"
+    "enc": "javascript-obfuscator ./src --output ./dist --compact true --self-defending true --target node --identifier-names-generator hexadecimal --string-array-encoding rc4",
+    "docgen":"node ./src/swagger.js"
   },
   "repository": {
     "type": "git",
@@ -43,6 +44,9 @@
     "helmet": "^7.1.0",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.12.0",
+    "swagger-autogen": "^2.23.7",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
     "unsql": "^2.0.3"
   },
   "devDependencies": {

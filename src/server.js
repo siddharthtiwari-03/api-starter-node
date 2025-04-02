@@ -16,6 +16,9 @@ const cors = require('cors')
 const helmet = require('helmet')
 const compression = require('compression')
 
+const swaggerUi = require('swagger-ui-express')
+// const swaggerDocument = require('../swagger-output.json') // uncomment only after "npm run docgen is executed"
+
 const os = require('os')
 const cluster = require('cluster')
 
@@ -26,7 +29,7 @@ const cluster = require('cluster')
 const appRouter = require('./app.router')
 const { envs } = require('./services/environment.service')
 const numOfCores = os.availableParallelism()
-const whiteListedDomains = ['http://localhost:' + envs.port, '*']
+const allowedOrigins = ['http://localhost:' + envs.port, '*']
 
 // Internal dependencies end here
 
@@ -74,6 +77,7 @@ if (envs.use_cluster_module === 'true' && cluster.isPrimary) {
     // Middlewares end here
 
     // Route mappings start here
+    // app.use('/open-doc', swaggerUi.serve, swaggerUi.setup(swaggerDocument)) // uncomment only after "npm run docgen is executed"
     app.use(appRouter)
     // Route mappings end here
 
