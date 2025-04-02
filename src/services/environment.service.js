@@ -7,6 +7,9 @@
 const envs = Object.freeze({
     port: process.env.PORT || 5800,
     use_cluster_module: process.env.USE_CLUSTER_MODULE,
+    open_api: {
+        doc_mode: process.env.OPEN_API_DOC_MODE || "false",
+    },
 
     // DB Credentials
     db: {
