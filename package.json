@@ -47,7 +47,7 @@
     "swagger-autogen": "^2.23.7",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
-    "unsql": "^2.0.3"
+    "unsql": "^2.0.8"
   },
   "devDependencies": {
     "javascript-obfuscator": "^4.1.1",
