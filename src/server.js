@@ -1,13 +1,13 @@
 // External dependencies start here
 require('dotenv').config()
 
-// Include env files depending on the 'ENV_MODE'
+// Include env files depending on the 'NODE_ENV'
 
-if (process.env.ENV_MODE === 'dev')
+if (process.env.NODE_ENV === 'dev')
     require('dotenv').config({ path: ['.env.dev'] })
-else if (process.env.ENV_MODE === 'prod')
+else if (process.env.NODE_ENV === 'prod')
     require('dotenv').config({ path: ['.env.prod'] })
-else if (process.env.ENV_MODE === 'stage')
+else if (process.env.NODE_ENV === 'stage')
     require('dotenv').config({ path: ['.env.stage'] })
 
 
@@ -15,9 +15,11 @@ const express = require('express')
 const cors = require('cors')
 const helmet = require('helmet')
 const compression = require('compression')
+const fs = require('fs')
+const path = require('path')
 
 const swaggerUi = require('swagger-ui-express')
-// const swaggerDocument = require('../swagger-output.json') // uncomment only after "npm run docgen is executed"
+const swaggerSpec = require('./swagger')
 
 const os = require('os')
 const cluster = require('cluster')
@@ -54,7 +56,7 @@ if (envs.use_cluster_module === 'true' && cluster.isPrimary) {
     }
     // Graceful shutdown for the master (Add here)
     process.on('SIGTERM', () => {
-        console.log(`Master ${process.pid} received SIGTERM, shutting down...`)
+        console.info(`Master ${process.pid} received SIGTERM, shutting down...`)
         for (const id in cluster.workers) {
             cluster.workers[id].kill()
         }
@@ -77,7 +79,9 @@ if (envs.use_cluster_module === 'true' && cluster.isPrimary) {
     // Middlewares end here
 
     // Route mappings start here
-    // app.use('/open-doc', swaggerUi.serve, swaggerUi.setup(swaggerDocument)) // uncomment only after "npm run docgen is executed"
+
+    // Safely load the swagger doc
+    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
     app.use(appRouter)
     // Route mappings end here
 
@@ -91,7 +95,7 @@ if (envs.use_cluster_module === 'true' && cluster.isPrimary) {
 
     // Graceful shutdown for the worker (Add here)
     process.on('SIGTERM', () => {
-        console.log(`Worker ${process.pid} received SIGTERM, shutting down...`)
+        console.error(`Worker ${process.pid} received SIGTERM, shutting down...`)
         // Add server close logic here, if needed
         process.exit(0)
     })

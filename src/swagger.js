@@ -1,16 +1,25 @@
-const { envs } = require('./services/environment.service')
+const swaggerJSDoc = require('swagger-jsdoc');
 
-const swaggerAutoGen = require('swagger-autogen')()
-
-const doc = {
+const swaggerDefinition = {
+    openapi: '3.0.0', // This is the version of OpenAPI that swagger-ui-express uses
     info: {
-        title: 'Doc: Api Starter kit (NodeJs)',
-        description: 'These are the auto generated documentations for this starter kit'
+        title: 'Your API Documentation',
+        version: '1.0.0',
+        description: 'A simple RESTful API documentation with Swagger-JSDoc',
     },
-    host: `localhost:${envs.port}`
-}
+    servers: [
+        {
+            url: 'http://localhost:5800', // Update with your server URL
+            description: 'Development server',
+        },
+    ],
+};
 
-const outputFile = '../swagger-output.json'
-const routes = ['./app.router.js']
+const options = {
+    swaggerDefinition,
+    apis: ['./src/routers/**/*.js'], // Files containing API annotations
+};
 
-swaggerAutoGen(outputFile, routes, doc)
+const swaggerSpec = swaggerJSDoc(options);
+
+module.exports = swaggerSpec;

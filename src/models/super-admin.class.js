@@ -7,17 +7,17 @@ const { envs } = require('../services/environment.service')
 
 
 /**
- * @class User
+ * @class Super Admin
  * @extends UnSQL
  */
-class User extends UnSQL {
+class SuperAdmin extends UnSQL {
 
     /**
      * UnSQL config
      * @type {UnSQL.config}
      */
     static config = {
-        table: envs.tables.user.account || '', // (mandatory) replace this with your table name
+        table: envs.tables.super.account || '', // (mandatory) replace this with your table name
         pool, // replace 'pool' with 'connection' if you wish to use single connection instead of connection pool
         safeMode: true,
         devMode: false,
@@ -26,4 +26,4 @@ class User extends UnSQL {
 
 }
 
-module.exports = { User }
+module.exports = { SuperAdmin }

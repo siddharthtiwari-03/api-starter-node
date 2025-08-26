@@ -23,7 +23,14 @@ const envs = Object.freeze({
 
     // DB Tables
     tables: {
-        user: process.env.DB_TABLE_USERS
+        super: {
+            account: process.env.DB_TABLE_SUPER_ADMINS,
+            mfa: process.env.DB_TABLE_SUPER_ADMIN_MFA_TOKENS,
+        },
+        user: {
+            account: process.env.DB_TABLE_USERS,
+            mfa: process.env.DB_TABLE_USER_MFA_TOKENS,
+        }
     },
 
     // AWS Credentials

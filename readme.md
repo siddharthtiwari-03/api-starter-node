@@ -27,7 +27,7 @@ npm install
 
 ### Run in Dev mode
 
-Use following cli command to run application on dev mode
+Use following cli command to run application on dev mode (live reload enabled)
 
 ```bash
 npm run dev
@@ -35,7 +35,7 @@ npm run dev
 
 ### Run in Production mode
 
-Use following cli command to run application on production mode
+Use following cli command to run application on production mode (live reload disabled)
 
 ```bash
 npm start

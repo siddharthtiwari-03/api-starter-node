@@ -1,44 +1,34 @@
 // External dependencies start here
-
-const router = require('express').Router({ mergeParams: true })
 const bcrypt = require('bcrypt')
-
 // External dependencies end here
 
 // Internal dependencies start here
-
-const { User } = require('../../models/user.class')
 const { prettifyError } = require('../../services/helper.service')
-
+const { SuperAdmin } = require('../../models/super-admin.class')
 // Internal dependencies end here
 
 
-// ### Routes start here
-
-// Login method starts here
-router.post('/login', async (req, res) => {
+const superLogin = async (req, res) => {
 
     // get login ID and password from body
     const { loginID, password } = req.body
-    console.log('user login invoked', loginID, password)
+    console.log('super admin login invoked', loginID, password)
 
     // limit query data
-    const select = ['userID', 'fname', 'lname', 'userPass', 'userStatus']
+    const select = ['superId', 'firstName', 'lastName', 'superEmail', 'superPassword']
 
     // create conditions to search DB
-    const where = { userEmail: `#${loginID}` }
-    // const where = { userEmail: '#' + loginID }
-
+    const where = { superEmail: `#${loginID}` }
 
     // execute query
-    const found = await User.find({ select, where })
+    const found = await SuperAdmin.find({ select, where })
 
-    console.log('user found', found)
+    console.log('super admin found', found)
 
     switch (true) {
         // catch generic errors or client induced errors
         case !found.success: {
-            console.error('error while finding user', found)
+            console.error('error while finding super admin', found)
             return res.status(400).json(prettifyError(found))
         }
 
@@ -47,18 +37,12 @@ router.post('/login', async (req, res) => {
             console.error('Invalid loginID')
             return res.status(401).json({ success: false, error: 'Invalid login ID!' })
         }
-
-        // check if user is inactive
-        case found.result[0].userStatus == 0: {
-            console.error('In-active user account')
-            return res.status(403).json({ success: false, error: 'Action Denied! Your account is disabled' })
-        }
     }
 
-    const { userPass, ...user } = found.result[0]
+    const { superPassword, ...superAdmin } = found.result[0]
 
     // Check if entered password matches
-    const match = await bcrypt.compare(password, userPass)
+    const match = await bcrypt.compare(password, superPassword)
 
     // handle if password is invalid
     if (!match) {
@@ -72,11 +56,8 @@ router.post('/login', async (req, res) => {
 
     res.appendHeader('x-refresh-token', refresh_token)
 
-    // send response with token and limited user data
-    res.status(200).json({ success: true, access_token, account: user })
-})
-// Login method ends here
+    // send response with token and limited superAdmin data
+    res.status(200).json({ success: true, access_token, account: superAdmin })
+}
 
-// ### Routes end here
-
-module.exports = router
+module.exports = { superLogin }

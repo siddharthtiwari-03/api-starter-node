@@ -61,6 +61,93 @@ const applySearch = (search, columns = []) => {
     return { or }
 }
 
+const applySort = (sort, columnName, tieBreaker = '', dateColumn = 'createdOn') => {
+    const orderBy = {}
+    switch (sort) {
+        case 'az':
+            orderBy[columnName] = 'asc'
+            if (tieBreaker) orderBy[tieBreaker] = 'asc'
+            return { orderBy }
+        case 'za':
+            orderBy[columnName] = 'desc'
+            if (tieBreaker) orderBy[tieBreaker] = 'desc'
+            return { orderBy }
+        case 'oldest':
+            orderBy[dateColumn] = 'asc'
+            if (tieBreaker) orderBy[tieBreaker] = 'asc'
+            return { orderBy }
+        case 'latest':
+        default:
+            orderBy[dateColumn] = 'desc'
+            if (tieBreaker) orderBy[tieBreaker] = 'desc'
+            return { orderBy }
+    }
+}
+
+const applyRange = (range, column) => {
+    switch (range) {
+        case 'week':
+            return {
+                date: {
+                    value: column,
+                    format: 'w Y',
+                    compare: {
+                        eq: {
+                            date: {
+                                value: 'currentDate',
+                                format: 'w Y'
+                            }
+                        }
+                    }
+                }
+            }
+        case 'month':
+            return {
+                date: {
+                    value: column,
+                    format: 'M Y',
+                    compare: {
+                        eq: {
+                            date: {
+                                value: 'currentDate',
+                                format: 'M Y'
+                            }
+                        }
+                    }
+                }
+            }
+        case 'year':
+            return {
+                date: {
+                    value: column,
+                    format: 'Y',
+                    compare: {
+                        eq: {
+                            date: {
+                                value: 'currentDate',
+                                format: 'Y'
+                                // sub: '1y'
+                            }
+                        }
+                    }
+                }
+            }
+
+        default:
+            return {}
+    }
+}
+
+const applyFilters = (filters) => {
+    const condition = {}
+    const entries = Object.entries(filters)
+    for (let i = 0; i < entries.length; i++) {
+        if (!entries[i][1]) continue
+        condition[entries[i][0]] = entries[i][1].split(',').map(filter => Number(filter) ? filter : `#${filter}`) || []
+    }
+    return condition
+}
+
 /**
  * Matches string with regex pattern
  * @function matchRegex
@@ -139,4 +226,17 @@ const addPresignedURL = async (obj, columnName = 'coverURL', signedName = 'signe
     }
 }
 
-module.exports = { skipFor, generateCode, applyPagination, applySearch, matchRegex, matchParamRegex, prettifyError, patchInline, addPresignedURL }
+module.exports = {
+    skipFor,
+    generateCode,
+    applyPagination,
+    applySearch,
+    applySort,
+    applyRange,
+    applyFilters,
+    matchRegex,
+    matchParamRegex,
+    prettifyError,
+    patchInline,
+    addPresignedURL
+}
