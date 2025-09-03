@@ -3,13 +3,13 @@ const sharedRoutes = require('express').Router({ mergeParams: true })
 const protectedRoutes = require('express').Router({ mergeParams: true })
 const reservedRoutes = require('express').Router({ mergeParams: true })
 
-const { createUser } = require('./user.create')
+const { createUser } = require('./create-user.post')
+const { getAllUsers } = require('./list-user.get')
+const { updateUser } = require('./update-user.put')
+const { getUserInfo } = require('./user-info.get')
 const { deleteUser } = require('./user.delete')
-const { getUserInfo } = require('./user.get')
-const { getAllUsers } = require('./user.get-all')
 const { userLogin } = require('./user.login')
 const { patchUser } = require('./user.patch')
-const { updateUser } = require('./user.update')
 
 /**
  * @swagger
