@@ -1,6 +1,10 @@
+// self only: login, forgot-password
 const privateRoutes = require('express').Router({ mergeParams: true })
-const sharedRoutes = require('express').Router({ mergeParams: true })
+// non editable shared for parent and sibling level: get listing
 const protectedRoutes = require('express').Router({ mergeParams: true })
+// shared editable with parent and self: PUT, Patch, get by ID
+const sharedRoutes = require('express').Router({ mergeParams: true })
+// parent only: POST, DELETE
 const reservedRoutes = require('express').Router({ mergeParams: true })
 
 const { createUser } = require('./create-user.post')

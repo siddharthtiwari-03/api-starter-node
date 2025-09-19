@@ -17,10 +17,6 @@ const updateUser = async (req, res) => {
         return res.status(400).json(prettifyError(updated))
     }
 
-    if (updated.result.length === 0) {
-        return res.status(404).json({ success: false, error: 'User not found' })
-    }
-
     res.json(updated) // Return the updated user data
 }
 

@@ -19,10 +19,6 @@ const patchUser = async (req, res) => {
         return res.status(400).json(prettifyError(patched))
     }
 
-    if (patched.result.length === 0) {
-        return res.status(404).json({ success: false, error: 'User not found' })
-    }
-
     res.json(patched) // Return the patched user data
 }
 
