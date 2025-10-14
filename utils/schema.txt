@@ -1,0 +1,21 @@
+my course schema is divided into separate SQL tables: 
+
+
+
+1. courses_table (holds basic details and courseID anchor)->{courseID: int primary key, courseName: varchar(255), courseDes: TEXT default Null, coverURL: varchar(255) default Null (contains s3 bucker object Key)}
+
+
+
+2. modules_table (chapters to encapsulate contents/flashcards/quizzes, if marked as final [isFinal: 1] will act as final quiz and contain only quizzes)->{modID: INT PRIMARY KEY, courseID: INT Foreign Key refers courses_table(courseID), modName: varchar(255), modDes: TEXT default Null, badgeURL: varchar(255) default null (contains s3 bucket object Key), isFinal: tinyint(1) default 0 (0/1 identifies if this module is final or not), passingPoints: int default 0}
+
+
+
+3. course_contents_table (contains actual content of the course in any combination of text/image/video, flashcards and quizzes will be generated based on these contents and overall course basic details)->{contentID: int primary key, modID int foreign key refers modules_table(modID), courseID: INT Foreign Key refers courses_table(courseID), contentName: varchar(255) default null (optional name of this flashcard), contentDes: text default null (text based content), videoURL: varchar(255) default Null (contains s3 bucker object Key of video based content), contentDuration: time default '00:00:00' (approx time required to complete this course content), coverURL: varchar(255) default Null (contains s3 bucker object Key for image based content), rewardPoints: int default 10}
+
+
+
+4. flashcards_table (traditional flashcards with 1 question and 1 answer to examine the overall knowledge acquired during the course content)->{flashID: int primary key, modID int foreign key refers modules_table(modID), courseID: INT Foreign Key refers courses_table(courseID), flashName: varchar(255) default null (optional name of this flashcard), flashQuestion: text (question to be displayed), flashAnswer: text (answer of the flashQuestion), coverURL: varchar(255) default Null (contains s3 bucker object Key), rewardPoints: int default 10}
+
+
+
+5. quizzes_table (MCQ based question to further check the knowledge acquired during the course)->{quizID: int primary key, modID int foreign key refers modules_table(modID), courseID: INT Foreign Key refers courses_table(courseID), quizQuestion: text (question to be displayed), optionA: text (1 of 4 options for the quizQuestion), optionB: text (1 of 4 options for the quizQuestion), optionC: text (1 of 4 options for the quizQuestion), optionD: text (1 of 4 options for the quizQuestion), correctOption: varchar(10) (can have a value like: 'optionA' or 'optionB' or 'optionC' or 'optionD'), rewardPoints: int default 10}

@@ -10,7 +10,21 @@
     "lint": "npx eslint src/",
     "lint-fix": "npx eslint src/ --fix",
     "enc": "javascript-obfuscator ./src --output ./dist --compact true --simplify true --self-defending true --target node --identifier-names-generator hexadecimal --string-array-encoding rc4 --string-array true --string-array-rotate true --string-array-shuffle true --string-array-threshold 0.75",
-    "docgen": "node ./src/swagger.js"
+    "docgen": "node ./src/swagger.js",
+    "docker": "docker compose up --build --force-recreate -d",
+    "docker:down": "docker compose down",
+    "docker:down:volumes": "docker compose down -v",
+    "docker:logs": "docker compose logs -f server",
+    "docker:logs:all": "docker compose logs -f --timestamps",
+    "docker:ps": "docker compose ps",
+    "docker:rebuild": "npm run docker:down && npm run docker:prune && npm run docker",
+    "docker:rebuild-volumes": "npm run docker:down:volumes && npm run docker:prune-all && npm run docker",
+    "docker:prune": "docker system prune -af",
+    "docker:prune-cache": "docker builder prune -af",
+    "docker:prune-images": "docker image prune -af",
+    "docker:prune-volumes": "docker volume prune -f",
+    "docker:prune-all": "docker system prune -af --volumes",
+    "docker:stats": "docker system df"
   },
   "repository": {
     "type": "git",
@@ -35,6 +49,10 @@
     "@aws-sdk/client-sns": "^3.731.1",
     "@aws-sdk/client-sqs": "^3.731.1",
     "@aws-sdk/s3-request-presigner": "^3.731.1",
+    "@langchain/aws": "^0.1.15",
+    "@langchain/community": "^0.3.56",
+    "@langchain/core": "^0.3.77",
+    "ai": "^5.0.65",
     "bcrypt": "^5.1.1",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.7",
@@ -45,6 +63,7 @@
     "firebase-admin": "^13.0.2",
     "helmet": "^7.1.0",
     "jsonwebtoken": "^9.0.2",
+    "langchain": "^0.3.34",
     "mysql2": "^3.14.3",
     "swagger-autogen": "^2.23.7",
     "swagger-jsdoc": "^6.2.8",
@@ -55,5 +74,8 @@
     "eslint": "^9.30.1",
     "javascript-obfuscator": "^4.1.1",
     "nodemon": "^3.1.10"
+  },
+  "overrides": {
+    "langchain": "^0.3.34"
   }
 }

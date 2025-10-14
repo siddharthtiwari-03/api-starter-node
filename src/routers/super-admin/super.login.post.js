@@ -1,17 +1,19 @@
 // External dependencies start here
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 // External dependencies end here
 
 // Internal dependencies start here
 const { prettifyError } = require('../../services/helper.service')
 const { SuperAdmin } = require('../../models/super-admin.class')
+const { envs } = require('../../services/environment.service')
 // Internal dependencies end here
 
 
 const superLogin = async (req, res) => {
 
     // get login ID and password from body
-    const { loginID, password } = req.body
+    const { loginID, password, keepSigned } = req.body
     console.log('super admin login invoked', loginID, password)
 
     // limit query data
@@ -51,8 +53,8 @@ const superLogin = async (req, res) => {
     }
 
     // generate access token using any method
-    const access_token = ''
-    const refresh_token = ''
+    const refresh_token = jwt.sign({ superID: superAdmin.superID, accessRole: 'super' }, envs.jwt.refresher_secret, { expiresIn: keepSigned ? '180d' : envs.jwt.refresher_ttl })
+    const access_token = jwt.sign({ superID: superAdmin.superID, accessRole: 'super' }, envs.jwt.accessor_secret, { expiresIn: envs.jwt.accessor_ttl })
 
     res.appendHeader('x-refresh-token', refresh_token)
 

@@ -40,3 +40,5 @@ Use following cli command to run application on production mode (live reload dis
 ```bash
 npm start
 ```
+
+You can also run this app using docker, checkout the `readme.docker.md` file in the root directory

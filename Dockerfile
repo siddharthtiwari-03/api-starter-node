@@ -1,39 +1,35 @@
-# syntax=docker/dockerfile:1
+# syntax=docker/dockerfile:1.4
+# We use a specific Node.js version to ensure consistent builds
+FROM node:24-alpine3.22
 
-# Comments are provided throughout this file to help you get started.
-# If you need more help, visit the Dockerfile reference guide at
-# https://docs.docker.com/go/dockerfile-reference/
+# Use production environment by default
+# ENV NODE_ENV dev
+ENV NODE_ENV prod
 
-# Want to help us make this template better? Share your feedback here: https://forms.gle/ybq9Krt8jtBL3iCk7
+# Set the working directory
+WORKDIR /app
 
-ARG NODE_VERSION=20.13.1
+# Copy only the dependency manifest files first to leverage build cache
+COPY package*.json .
 
-FROM node:${NODE_VERSION}-alpine
+# Give the 'node' user ownership of the /app directory
+# This step is critical and must be done as 'root' before switching users
+RUN chown -R node:node /app
 
-# Use production node environment by default.
-ENV NODE_ENV production
-
-
-WORKDIR /usr/src/app
-
-# Download dependencies as a separate step to take advantage of Docker's caching.
-# Leverage a cache mount to /root/.npm to speed up subsequent builds.
-# Leverage a bind mounts to package.json and package-lock.json to avoid having to copy them into
-# into this layer.
-
-RUN --mount=type=bind,source=package.json,target=package.json \
-    --mount=type=bind,source=package-lock.json,target=package-lock.json \
-    --mount=type=cache,target=/root/.npm \
-    npm ci --omit=dev
-
-# Run the application as a non-root user.
+# Switch to the non-root user
 USER node
 
-# Copy the rest of the source files into the image.
-COPY . .
+# Install dependencies in a separate layer
+# This step is the most time-consuming; caching it is crucial
+# RUN npm ci --omit=dev
+RUN npm ci
 
-# Expose the port that the application listens on.
-EXPOSE 5500
+# Copy the rest of the application source code
+COPY --chown=node:node . .
 
-# Run the application.
-CMD npm start
+# Expose the application port
+EXPOSE 5800
+
+# Start the application
+# CMD [ "npm", "start" ]
+CMD [ "npm", "run", "dev" ]

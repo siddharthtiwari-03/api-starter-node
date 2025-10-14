@@ -1,17 +1,19 @@
 // External dependencies start here
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 // External dependencies end here
 
 // Internal dependencies start here
 const { User } = require('../../models/user.class')
 const { prettifyError } = require('../../services/helper.service')
+const { envs } = require('../../services/environment.service')
 // Internal dependencies end here
 
 
 const userLogin = async (req, res) => {
 
     // get login ID and password from body
-    const { loginID, password } = req.body
+    const { loginID, password, keepSigned } = req.body
     console.log('user login invoked', loginID, password)
 
     // limit query data
@@ -59,8 +61,8 @@ const userLogin = async (req, res) => {
     }
 
     // generate access token using any method
-    const access_token = ''
-    const refresh_token = ''
+    const refresh_token = jwt.sign({ userID: user.userID, accessRole: 'user' }, envs.jwt.refresher_secret, { expiresIn: keepSigned ? '180d' : envs.jwt.refresher_ttl })
+    const access_token = jwt.sign({ userID: user.userID, accessRole: 'user' }, envs.jwt.accessor_secret, { expiresIn: envs.jwt.accessor_ttl })
 
     res.appendHeader('x-refresh-token', refresh_token)
 

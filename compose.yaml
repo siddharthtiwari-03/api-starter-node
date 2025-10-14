@@ -1,51 +1,81 @@
-# Comments are provided throughout this file to help you get started.
-# If you need more help, visit the Docker Compose reference guide at
-# https://docs.docker.com/go/compose-spec-reference/
+version: '3.8'
 
-# Here the instructions define your application as a service called "server".
-# This service is built from the Dockerfile in the current directory.
-# You can add other services your application may depend on here, such as a
-# database or a cache. For examples, see the Awesome Compose repository:
-# https://github.com/docker/awesome-compose
 services:
   server:
     build:
       context: .
     environment:
-      NODE_ENV: production
+      NODE_ENV: dev
+      PORT: 5800
     ports:
-      - 5500:5500
+      - 5800:5800
+    volumes:
+      - .:/app
+    # depends_on:
+    # redis:
+    #   condition: service_healthy
+      # This anonymous volume prevents the local node_modules from being
+      # mounted over the one built inside the container.
+      - /app/node_modules
+    # un-comment on production level only
+    # restart: always
+    # healthcheck:
+    #   test: ["CMD-SHELL", "curl -f http://localhost:5800/health || exit 1"]
+    #   interval: 30s
+    #   timeout: 5s
+    #   retries: 3
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: "0.75"
+    #       memory: 512M
+    #     reservations:
+    #       cpus: "0.25"
+    #       memory: 256M
+    # networks:
+    #   - app_net
 
-# The commented out section below is an example of how to define a PostgreSQL
-# database that your application can use. `depends_on` tells Docker Compose to
-# start the database before your application. The `db-data` volume persists the
-# database data between container restarts. The `db-password` secret is used
-# to set the database password. You must create `db/password.txt` and add
-# a password of your choosing to it before running `docker-compose up`.
-#     depends_on:
-#       db:
-#         condition: service_healthy
-#   db:
-#     image: postgres
-#     restart: always
-#     user: postgres
-#     secrets:
-#       - db-password
+  redis:
+    image: redis:latest
+    ports:
+    - 6379:6379
+    volumes:
+    - redis_vol:/data
+    restart: always
+    command: ["redis-server", "--save", "60", "1", "--loglevel", "warning"]
+    # healthcheck:
+    #   test: ["CMD", "redis-cli", "ping"]
+    #   interval: 30s
+    #   timeout: 3s
+    #   retries: 5
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: "0.5"
+    #       memory: 256M
+    # networks:
+    #   - app_net
+
+# Enable this when working with vector database for AI projects
+#   qdrant:
+#     image: qdrant/qdrant:latest
+#     ports:
+#       - "6333:6333"
+#       - "6334:6334"
 #     volumes:
-#       - db-data:/var/lib/postgresql/data
+#       - qdrantdb_vol:/qdrant/storage
+#     restart: always
 #     environment:
-#       - POSTGRES_DB=example
-#       - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
-#     expose:
-#       - 5432
-#     healthcheck:
-#       test: [ "CMD", "pg_isready" ]
-#       interval: 10s
-#       timeout: 5s
-#       retries: 5
-# volumes:
-#   db-data:
-# secrets:
-#   db-password:
-#     file: db/password.txt
+#       # Optional: set Qdrant's storage path if it deviates from the default /qdrant/storage
+#       # QDRANT__STORAGE__STORAGE_PATH: /qdrant/storage
+#       - QDRANT__SERVICE__GRPC_PORT=6334 # Example environment variables
+#       - QDRANT__SERVICE__HTTP_PORT=6333
 
+# Use in conjunction with qdrant service
+volumes:
+ redis_vol:
+#  qdrantdb_vol:
+
+# networks:
+#   app_net:
+#     driver: bridge

@@ -1,5 +1,5 @@
 const { SendMessageCommand } = require("@aws-sdk/client-sqs")
-const { sqsClient } = require("./aws.service")
+const { getSQSClient } = require("./aws.service")
 
 /**
  * sends message over SQS
@@ -19,7 +19,11 @@ const pushSQS = async (payLoad, QueueUrl) => {
         QueueUrl, MessageBody: JSON.stringify(payLoad)
     })
 
-    const sqsRes = await sqsClient.send(command)
+    const { success, client, ...error } = getSQSClient()
+
+    if (!success) return { success, error }
+
+    const sqsRes = await client.send(command)
 
     return sqsRes
 }

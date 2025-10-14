@@ -6,7 +6,11 @@ const pool = mysql.createPool({
     user: envs.db.user,
     password: envs.db.pass,
     database: envs.db.name,
-    connectionLimit: envs.db.connection_limit
+    connectionLimit: envs.db.connection_limit,
+    waitForConnections: true,
+    queueLimit: 100,
+    connectTimeout: 10000,
+    insecureAuth: true
 })
 
 module.exports = pool

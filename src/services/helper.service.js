@@ -1,4 +1,4 @@
-const { generateURL_GET } = require("./aws-s3.service")
+const { generate_get_url } = require("./aws-s3.service")
 const { envs } = require("./environment.service")
 
 /**
@@ -218,12 +218,21 @@ const patchInline = (condition, patchValue, elseValue = '') => (condition && con
  * @author Siddharth Tiwari
  */
 const addPresignedURL = async (obj, columnName = 'coverURL', signedName = 'signedURL') => {
+    console.log('obj', obj)
     if (!obj) return
     if (obj[columnName] && !obj[columnName].includes('http')) {
-        const presigner = await generateURL_GET({ Key: obj[columnName] })
+        const presigner = await generate_get_url({ Key: obj[columnName] })
+
+        console.log('presigner', presigner)
         if (presigner.success) obj[signedName] = presigner.signedURL
         if (envs?.aws?.cloudfront?.cdn_url && !obj[columnName].includes('http')) obj['cdn_' + columnName] = encodeURI(envs.aws.cloudfront.cdn_url + obj[columnName])
     }
+}
+
+const debugRequest = (req) => {
+    console.log('Request Method:', req.method)
+    console.log('Request URL:', req.originalUrl)
+    console.log('Request agent:', req.headers['user-agent'])
 }
 
 module.exports = {
@@ -238,5 +247,6 @@ module.exports = {
     matchParamRegex,
     prettifyError,
     patchInline,
-    addPresignedURL
+    addPresignedURL,
+    debugRequest
 }

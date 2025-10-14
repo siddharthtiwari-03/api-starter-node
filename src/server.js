@@ -15,8 +15,6 @@ const express = require('express')
 const cors = require('cors')
 const helmet = require('helmet')
 const compression = require('compression')
-const fs = require('fs')
-const path = require('path')
 
 const swaggerUi = require('swagger-ui-express')
 const swaggerSpec = require('./swagger')
@@ -30,8 +28,9 @@ const cluster = require('cluster')
 
 const appRouter = require('./app.router')
 const { envs } = require('./services/environment.service')
+const { auth } = require('./services/auth.service')
 const numOfCores = os.availableParallelism()
-const allowedOrigins = ['http://localhost:' + envs.port, '*']
+const allowedOrigins = [`http://localhost:${envs.port}`]
 
 // Internal dependencies end here
 
@@ -54,7 +53,7 @@ if (envs.use_cluster_module === 'true' && cluster.isPrimary) {
             }
         })
     }
-    // Graceful shutdown for the master (Add here)
+    // Graceful shutdown for the master
     process.on('SIGTERM', () => {
         console.info(`Master ${process.pid} received SIGTERM, shutting down...`)
         for (const id in cluster.workers) {
@@ -75,7 +74,7 @@ if (envs.use_cluster_module === 'true' && cluster.isPrimary) {
     app.options('*', cors())
     app.use(helmet())
     app.use(compression())
-
+    app.use(auth)
     // Middlewares end here
 
     // Route mappings start here
@@ -93,7 +92,7 @@ if (envs.use_cluster_module === 'true' && cluster.isPrimary) {
 
     app.listen(envs.port, () => console.info(`Server cluster started, listening at: ${envs.port}`))
 
-    // Graceful shutdown for the worker (Add here)
+    // Graceful shutdown for the worker
     process.on('SIGTERM', () => {
         console.error(`Worker ${process.pid} received SIGTERM, shutting down...`)
         // Add server close logic here, if needed
@@ -103,7 +102,7 @@ if (envs.use_cluster_module === 'true' && cluster.isPrimary) {
 
 // server instantiation ends here
 
-// Global Error Handlers (Place at the very end of the file)
+// Global Error Handlers
 process.on('unhandledRejection', (reason, promise) => {
     console.error('Unhandled Rejection at:', promise, 'reason:', reason)
     // Add logging or other specific handling here

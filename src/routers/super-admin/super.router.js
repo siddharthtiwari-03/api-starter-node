@@ -1,3 +1,4 @@
+// self only: login, forgot-password
 const privateRoutes = require('express').Router({ mergeParams: true })
 
 const { userRouter } = require('../user/user.router')
