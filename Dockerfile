@@ -3,8 +3,8 @@
 FROM node:24-alpine3.22
 
 # Use production environment by default
-# ENV NODE_ENV dev
-ENV NODE_ENV prod
+ENV NODE_ENV dev
+# ENV NODE_ENV prod
 
 # Set the working directory
 WORKDIR /app
