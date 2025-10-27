@@ -11,12 +11,12 @@ services:
       - 5800:5800
     volumes:
       - .:/app
-    # depends_on:
-    # redis:
-    #   condition: service_healthy
       # This anonymous volume prevents the local node_modules from being
       # mounted over the one built inside the container.
       - /app/node_modules
+    # depends_on:
+    # redis:
+    #   condition: service_healthy
     # un-comment on production level only
     # restart: always
     # healthcheck:
@@ -56,6 +56,18 @@ services:
     # networks:
     #   - app_net
 
+# Enable this to use 'local' mysql database as service
+  # mysql:
+  #   image: mysql:latest
+  #   restart: always
+  #   container_name: mysql_container
+  #   environment:
+  #     - MYSQL_ROOT_PASSWORD=test@123
+  #   ports:
+  #   - 3306:3306
+  #   volumes:
+  #   - mysqldb_vol:/var/lib/mysql
+
 # Enable this when working with vector database for AI projects
 #   qdrant:
 #     image: qdrant/qdrant:latest
@@ -63,7 +75,7 @@ services:
 #       - "6333:6333"
 #       - "6334:6334"
 #     volumes:
-#       - qdrantdb_vol:/qdrant/storage
+#       - qdrant_db_vol:/qdrant/storage
 #     restart: always
 #     environment:
 #       # Optional: set Qdrant's storage path if it deviates from the default /qdrant/storage
@@ -74,7 +86,8 @@ services:
 # Use in conjunction with qdrant service
 volumes:
  redis_vol:
-#  qdrantdb_vol:
+#  mysql_db_vol:
+#  qdrant_db_vol:
 
 # networks:
 #   app_net:

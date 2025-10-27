@@ -24,7 +24,8 @@
     "docker:prune-images": "docker image prune -af",
     "docker:prune-volumes": "docker volume prune -f",
     "docker:prune-all": "docker system prune -af --volumes",
-    "docker:stats": "docker system df"
+    "docker:stats": "docker system df",
+    "mysql:connect": "docker exec -it mysql_container mysql -u root -p"
   },
   "repository": {
     "type": "git",

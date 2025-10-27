@@ -33,7 +33,7 @@ const getAllUsers = async (req, res) => {
         return res.status(400).json(prettifyError(found))
     }
 
-    return res.success(200).json(found) // Return the users list
+    return res.status(200).json(found) // Return the users list
 }
 
 module.exports = { getAllUsers }

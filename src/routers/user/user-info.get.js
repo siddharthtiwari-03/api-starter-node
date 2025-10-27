@@ -20,7 +20,7 @@ const getUserInfo = async (req, res) => {
         return res.status(400).json({ success: false, error: 'Invalid User Id! User not found' })
     }
 
-    return res.success(200).json({ success: true, result: found.result[0] }) // Return the updated user data
+    return res.status(200).json({ success: true, result: found.result[0] }) // Return the updated user data
 }
 
 module.exports = { getUserInfo }
