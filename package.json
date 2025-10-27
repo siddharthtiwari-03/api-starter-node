@@ -1,6 +1,6 @@
 {
   "name": "api-starter-node-docker",
-  "version": "2.8.2",
+  "version": "2.8.3",
   "description": "Quick starter kit for API building with docker and compose",
   "main": "server.js",
   "scripts": {
