@@ -1,0 +1,93 @@
+pipeline {
+    agent any
+
+    environment {
+        // Define your AWS regions, artifact names, or application details here
+        APP_NAME        = 'my-awesome-app'
+        AWS_REGION      = 'us-east-1'
+        // Securely reference AWS credentials stored in Jenkins Credentials Provider
+        AWS_CREDENTIALS = credentials('aws-jenkins-cicd-token')
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                echo 'Pulling code from GitHub...'
+                checkout scm
+            }
+        }
+
+        stage('Install Dependencies & Build') {
+            steps {
+                echo 'Installing packages and building application...'
+                // Example for a Node.js / Python application. Replace with your build commands (e.g., mvn clean package for Java)
+                sh 'npm install'
+                sh 'npm run build --if-present'
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                echo 'Running unit and integration tests...'
+                sh 'npm test --if-present'
+            }
+        }
+
+        stage('Deploy to Dev') {
+            // This stage ONLY runs when code is pushed/merged into the 'dev' branch
+            when {
+                branch 'dev'
+            }
+            steps {
+                echo 'Targeting Environment: DEVELOPMENT'
+                echo 'Deploying to a single Dev EC2 instance...'
+
+                // Example using SSH/Rsync to deploy to your single Dev server
+                // 'dev-server-ssh-key' must be configured in Jenkins Credentials
+                sshagent(['dev-server-ssh-key']) {
+                    sh '''
+                        rsync -avz --exclude='.git' ./ ubuntu@dev-ec2-ip-address:/var/www/html/app/
+                        ssh -o StrictHostKeyChecking=no ubuntu@dev-ec2-ip-address "cd /var/www/html/app && pm2 restart all || true"
+                    '''
+                }
+            }
+        }
+
+        stage('Deploy to Production') {
+            // This stage ONLY runs when code is pushed/merged into the 'main' or 'prod' branch
+            when {
+                branch 'main' // Change to 'prod' if your branch is named prod
+            }
+            steps {
+                echo 'Targeting Environment: PRODUCTION'
+                echo 'Deploying to 4 EC2 instances behind a Load Balancer via AWS CodeDeploy...'
+
+                // Step 1: Zip the built application artifacts
+                sh 'zip -r deployment-package.zip . -x "*.git*"'
+
+                // Step 2: Upload package to S3 and trigger AWS CodeDeploy
+                // CodeDeploy automatically handles updating all 4 instances behind your Load Balancer safely
+                withAWS(credentials: "${AWS_CREDENTIALS}", region: "${AWS_REGION}") {
+                    sh '''
+                        aws s3 cp deployment-package.zip s3://my-prod-deploy-bucket/artifacts/latest.zip
+                        aws deploy create-deployment \
+                            --application-name MyProdApplication \
+                            --deployment-config-name CodeDeployDefault.OneAtATime \
+                            --deployment-group-name MyProdDeploymentGroup \
+                            --s3-location bucket=my-prod-deploy-bucket,bundleType=zip,key=artifacts/latest.zip
+                    '''
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed. Sending alerts...'
+        // You can plug in Slack or Email notifications here
+        }
+    }
+}
