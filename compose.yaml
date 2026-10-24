@@ -1,19 +1,40 @@
-version: '3.8'
+
 
 services:
-  server:
+  server-local:
+    profiles: [local]
     build:
       context: .
+      target: development
+    container_name: server-local
+    command: ["npm","run","local"]
+    restart: unless-stopped
+    env_file:
+      - .env
+      - .env.dev
     environment:
-      NODE_ENV: dev
+      NODE_ENV: development
+      APP_ENV: dev
       PORT: 5800
     ports:
       - 5800:5800
-    volumes:
-      - .:/app
+    develop:
+      watch:
+        - path: .
+          action: sync
+          target: /app
+          ignore:
+            - node_modules/
+            - dist/
+            - .git/
+            - .vscode/
+        - path: package.json
+          action: rebuild
+    # volumes:
+    #   - .:/app
       # This anonymous volume prevents the local node_modules from being
       # mounted over the one built inside the container.
-      - /app/node_modules
+      # - /app/node_modules
     # depends_on:
     # redis:
     #   condition: service_healthy
@@ -35,14 +56,48 @@ services:
     # networks:
     #   - app_net
 
-  redis:
-    image: redis:latest
+  server-dev:
+    profiles: ['dev']
+    build:
+      context: .
+      target: development
+    container_name: server-dev
+    restart: unless-stopped
+    env_file:
+      - .env
+      - .env.dev
+    environment:
+      NODE_ENV: development
+      APP_ENV: dev
+      PORT: 5800
     ports:
-    - 6379:6379
-    volumes:
-    - redis_vol:/data
-    restart: always
-    command: ["redis-server", "--save", "60", "1", "--loglevel", "warning"]
+      - 5800:5800
+
+  server-prod:
+    profiles: ['prod']
+    build:
+      context: .
+      target: production
+    container_name: server-prod
+    restart: unless-stopped
+    env_file:
+      - .env
+      - .env.prod
+    environment:
+      NODE_ENV: production
+      APP_ENV: prod
+      PORT: 5800
+    ports:
+      - 5800:5800
+
+  # redis:
+  #   image: redis:latest
+  #   ports:
+  #   - 6379:6379
+  #   volumes:
+  #   - redis_vol:/data
+  #   restart: always
+  #   command: ["redis-server", "--save", "60", "1", "--loglevel", "warning"]
     # healthcheck:
     #   test: ["CMD", "redis-cli", "ping"]
     #   interval: 30s
@@ -84,8 +139,8 @@ services:
 #       - QDRANT__SERVICE__HTTP_PORT=6333
 
 # Use in conjunction with qdrant service
-volumes:
- redis_vol:
+# volumes:
+#  redis_vol:
 #  mysql_db_vol:
 #  qdrant_db_vol:
 

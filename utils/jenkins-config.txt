@@ -1,0 +1,84 @@
+pipeline {
+    agent any
+    
+    environment {
+        // Define AWS and ECR parameters
+        AWS_REGION     = 'us-east-1'
+        AWS_ACCOUNT_ID = '123456789012' // Replace with your AWS Account ID
+        ECR_REGISTRY   = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
+        ECR_REPOSITORY = 'my-node-app'
+        IMAGE_TAG      = "build-${BUILD_NUMBER}" // Unique tag per pipeline run
+        EC2_IP         = 'your-ec2-public-ip'
+    }
+
+    stages {
+        stage('Pull Code from GitHub') {
+            steps {
+                // Pulls down your repo branch containing code, Dockerfile, and metadata
+                git branch: 'main', 
+                    credentialsId: 'github-ssh-key-id', 
+                    url: 'git@github.com:yourusername/your-repo.git'
+            }
+        }
+
+        stage('Login to Amazon ECR') {
+            steps {
+                // Authenticate Jenkins machine CLI against AWS ECR
+                withAWS(credentials: 'aws-jenkins-credentials-id', region: "${AWS_REGION}") {
+                    sh "aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REGISTRY}"
+                }
+            }
+        }
+
+        stage('Build Production Docker Image') {
+            steps {
+                // Build targeting ONLY the production stage block to ensure an optimized build
+                sh "docker build --target production -t ${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG} ."
+                // Also tag it as latest to update tracking indicators
+                sh "docker tag ${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG} ${ECR_REGISTRY}/${ECR_REPOSITORY}:latest"
+            }
+        }
+
+        stage('Push Image to Amazon ECR') {
+            steps {
+                // Upload both the unique build tracking tag and the latest tracking tag
+                sh "docker push ${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}"
+                sh "docker push ${ECR_REGISTRY}/${ECR_REPOSITORY}:latest"
+            }
+        }
+
+        stage('Deploy to EC2') {
+            steps {
+                // Use Jenkins SSH Agent plugin to securely talk to the EC2 host
+                sshagent(['ec2-ssh-key-id']) {
+                    sh """
+                        ssh -o StrictHostKeyChecking=no ubuntu@${EC2_IP} "
+                            # 1. Access remote directory holding the compose file
+                            cd /home/ubuntu/app &&
+                            
+                            # 2. Authenticate the EC2 Docker Engine against your ECR yard
+                            aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REGISTRY} &&
+                            
+                            # 3. Force compose to explicitly pick up the newly pushed build tag 
+                            export ECR_REGISTRY=${ECR_REGISTRY}
+                            export ECR_REPOSITORY=${ECR_REPOSITORY}
+                            export IMAGE_TAG=${IMAGE_TAG}
+                            
+                            # 4. Pull the fresh image and execute an in-place swap
+                            docker compose pull &&
+                            docker compose up -d --remove-orphans
+                        "
+                    """
+                }
+            }
+        }
+    }
+    
+    post {
+        always {
+            // Clean up the image layers built on Jenkins to save disk space
+            sh "docker rmi ${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG} || true"
+            sh "docker rmi ${ECR_REGISTRY}/${ECR_REPOSITORY}:latest || true"
+        }
+    }
+}

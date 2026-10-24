@@ -187,6 +187,8 @@ const matchParamRegex = (params = [], pattern) => {
     }
 }
 
+const registerParam = (pattern = envs.uuid_regex) => (req, res, next, value) => pattern.test(value) ? next() : next('route')
+
 /**
  * prettifies the error
  * @function prettifyError
@@ -248,5 +250,6 @@ module.exports = {
     prettifyError,
     patchInline,
     addPresignedURL,
-    debugRequest
+    debugRequest,
+    registerParam
 }

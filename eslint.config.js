@@ -1,15 +1,24 @@
 // eslint.config.js
-const js = require("@eslint/js");
-const globals = require("globals");
-const { defineConfig } = require("eslint/config"); // Import defineConfig
+const js = require("@eslint/js")
+const globals = require("globals")
+const { defineConfig } = require("eslint/config")
 
-module.exports = defineConfig([ // Call defineConfig here and export its result
-  { files: ["**/*.{js,mjs,cjs}"], plugins: { js }, extends: [js.configs.recommended] }, // Corrected extends for @eslint/js
-  { files: ["**/*.js"], languageOptions: { sourceType: "commonjs" } },
-  { files: ["**/*.{js,mjs,cjs}"], languageOptions: { globals: globals.node } },
+module.exports = defineConfig([
+  // 1. Load the recommended configuration globally for all JS variations
+  js.configs.recommended,
+
+  // 2. Configure language settings, scope, and global variables
   {
+    files: ["**/*.{js,mjs,cjs}"],
+    languageOptions: {
+      sourceType: "commonjs", // Safe default for Node.js CommonJS setups
+      globals: {
+        ...globals.node, // Securely loads all Node.js global variables
+      },
+    },
+    // 3. Define project-wide custom rule configurations
     rules: {
-      "no-unused-vars": "off", // Turn off the rule entirely
+      "no-unused-vars": ["error", { argsIgnorePattern: "^_", varsIgnorePattern: "^_", ignoreRestSiblings: true }],  // Disables the rule completely as requested
     },
   },
-]);
+])

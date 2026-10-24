@@ -1,3 +1,8 @@
+// @ts-check
+
+/**
+ * @type {Record<string, any>}
+ */
 const methods = Object.freeze({
     all: { GET: true, PUT: true, PATCH: true, UPDATE: true, OPTIONS: true, POST: true, DELETE: true },
     reserved: { GET: true, PUT: true, PATCH: true, UPDATE: true, OPTIONS: true, POST: true, DELETE: false },
@@ -6,6 +11,9 @@ const methods = Object.freeze({
     none: { GET: false, PUT: false, PATCH: false, UPDATE: false, OPTIONS: false, POST: false, DELETE: false }
 })
 
+/**
+ * @type {Record<string, Record<string, any>>}
+ */
 const accessControls = Object.freeze({
     super: {
         super: methods.reserved,
@@ -18,17 +26,23 @@ const accessControls = Object.freeze({
 })
 
 /**
- * @function checkAccess
- * @description Middleware to check if the accessor has permission to access the 'resource'
+ * Middleware to check if the accessor has permission to access the 'resource'
  * @param {string} resource - The resource to check access for
- * @returns {function} Middleware function
+ * @returns
  * @author Siddharth Tiwari
  */
 const checkAccess = resource => {
+
+    /**
+     * @param {import("express").Request} req
+     * @param {import("express").Response} res
+     * @param {import("express").NextFunction} next
+     * @returns
+     */
     return (req, res, next) => {
         console.info(`firewall checkAccess invoked, resource: ${resource}`)
 
-        const { accessor } = req.locals
+        const { accessor } = res.locals || {}
 
         if (!(accessor?.accessRole in accessControls)) {
             console.error(`firewall checkAccess failed, invalid accessRole: ${accessor?.accessRole}`)
@@ -38,3 +52,5 @@ const checkAccess = resource => {
         return next()
     }
 }
+
+module.exports = { checkAccess }

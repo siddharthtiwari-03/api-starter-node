@@ -1,8 +1,8 @@
 // self only: login, forgot-password
 const privateRoutes = require('express').Router({ mergeParams: true })
 
-const { userRouter } = require('../user/user.router')
-const { superLogin } = require('./super.login.post')
+const { superLogin } = require('../handlers/super-admin/super.login.post')
+const { userRouter } = require('./user.router')
 
 /**
  * @swagger

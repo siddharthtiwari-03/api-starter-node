@@ -1,6 +1,5 @@
 const { S3Client } = require("@aws-sdk/client-s3")
 const { SQSClient } = require('@aws-sdk/client-sqs')
-const { SNSClient } = require('@aws-sdk/client-sns')
 const { BedrockRuntimeClient } = require('@aws-sdk/client-bedrock-runtime')
 const { envs } = require("./environment.service")
 
@@ -68,28 +67,6 @@ const getSQSClient = () => {
     return { success: true, client: awsClients.sqsClient }
 }
 
-
-/**
- * @function getSNSClient
- * @description Generates a singleton instance of the AWS SNS Client
- * @author Siddharth Tiwari
- * @returns {import("@aws-sdk/client-sns").SNSClient} The singleton instance of the SNS Client
- */
-const getSNSClient = () => {
-
-    if (awsClients.snsClient) return { success: true, client: awsClients.snsClient }
-
-    awsClients.snsClient = new SNSClient({
-        region: envs.aws.sns.region,
-        credentials: {
-            accessKeyId: envs.aws.sns.user.access_key_id,
-            secretAccessKey: envs.aws.sns.user.secret_access_key
-        }
-    })
-    return { success: true, client: awsClients.snsClient }
-}
-
-
 /**
  * @function getBedrockClient
  * @description Generates a singleton instance of the AWS Bedrock Runtime Client
@@ -115,4 +92,4 @@ const getBedrockClient = (type = null, awsRegion = null, totalAttempts = 2) => {
     return { success: true, client: awsClients.bedrockClient[type] }
 }
 
-module.exports = { getS3Client, getSQSClient, getSNSClient, getBedrockClient }
+module.exports = { getS3Client, getSQSClient, getBedrockClient }

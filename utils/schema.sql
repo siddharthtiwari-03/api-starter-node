@@ -4,15 +4,30 @@ CREATE DATABASE test_db;
 
 USE test_db;
 
-CREATE TABLE test_users(
-userID int not null primary key auto_increment,
-fname varchar(255) not null,
-lname varchar(255) default null,
-userEmail varchar(255) not null,
-userPass varchar(255) not null,
-createdOn timestamp default current_timestamp,
-lastUpdatedOn timestamp default current_timestamp on update current_timestamp,
-status tinyint(1) default 1
-);
+CREATE TABLE
+    test_users (
+        user_id varchar(45) not null primary key,
+        first_name varchar(255) not null,
+        last_name varchar(255) default null,
+        user_des varchar(255) default null,
+        user_email varchar(255) not null,
+        user_password varchar(255) not null,
+        created_on timestamp default current_timestamp,
+        last_updated_on timestamp default current_timestamp on update current_timestamp,
+        user_status tinyint (1) default 1
+    );
 
-insert into test_users (`fname`,`userEmail`,`userPpass`) values ('Sid','user@test.com','$2b$10$l6MPKVUR0sC/dQv.xKsx9ulwNoaN8xTlaEBGM6OoOO3TgTZ8xkhoW');
+insert into
+    test_users (
+        `user_id`,
+        `first_name`,
+        `user_email`,
+        `user_password`
+    )
+values
+    (
+        '40c53669-4fe5-4821-b92f-d264f7b3cc11',
+        'Sid',
+        'user@test.com',
+        '$2b$10$l6MPKVUR0sC/dQv.xKsx9ulwNoaN8xTlaEBGM6OoOO3TgTZ8xkhoW'
+    );

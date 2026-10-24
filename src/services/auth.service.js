@@ -2,11 +2,9 @@ const jwt = require('jsonwebtoken')
 
 const { debugRequest } = require("./helper.service")
 const { envs } = require('./environment.service')
-const { validationHandler } = require('./validator.service')
+const { validateSuperAdmin } = require('../validators/super-admin.validator')
 
-const validRoles = { super: true, user: true }
-
-const skipUrls = [/\/login|\/login2|\/signup/, /\/hash|\/secret/, /\/test/, /\/forgot-password/, /\/export/]
+const skipUrls = [/\/login|\/login2|\/signup/, /\/hash|\/secret/, /\/test/, /\/forgot-password/, /\/export/, /\/health/, /\/health-check/]
 
 /**
  * @function auth
@@ -14,7 +12,7 @@ const skipUrls = [/\/login|\/login2|\/signup/, /\/hash|\/secret/, /\/test/, /\/f
  * @param {*} req 
  * @param {*} res 
  * @param {*} next 
- * @returns {*} Proceeds to the next middleware if authentication is successful, otherwise sends an error response.
+ * @returns
  * @author Siddharth Tiwari
  */
 const auth = async (req, res, next) => {
@@ -39,11 +37,20 @@ const auth = async (req, res, next) => {
 
     // 3. validate refresher token
     try {
-        const { iat, exp, ...refresher } = jwt.verify(refreshToken, envs.jwt.refresh_secret)
+
+        const refresher_verified = jwt.verify(refreshToken, envs.jwt.refresher_secret)
+
+        if (typeof refresher_verified == 'string') {
+            console.error('invalid refresher')
+            return
+        }
+
+        const { iat, exp, ...refresher } = refresher_verified
         console.log('refresher decoded', refresher)
         res.locals.refresher = refresher
         next()
     } catch (error) {
+
         console.error('error while decoding refresher', error)
         debugRequest(req)
 
@@ -69,15 +76,23 @@ const auth = async (req, res, next) => {
     const token = authorization.split(' ')[1]
 
     try {
-        const { iat, exp, ...accessor } = jwt.verify(token, envs.jwt.refresh_secret)
+
+        const accessor_verified = jwt.verify(token, envs.jwt.refresher_secret)
+
+        if (typeof accessor_verified == 'string') {
+            console.error('invalid refresher')
+            return
+        }
+
+        const { iat, exp, ...accessor } = accessor_verified
 
         const signaturesCheck = {
-            super: res.locals.refresher?.superID === accessor?.superID,
-            user: res.locals.refresher?.userID === accessor?.userID
+            super: res.locals.refresher?.super_id === accessor?.super_id,
+            user: res.locals.refresher?.user_id === accessor?.user_id
         }
 
         // 7. handle mismatched signatures
-        if (!signaturesCheck?.[accessor?.accessRole]) {
+        if (!(accessor?.accessRole in signaturesCheck)) {
             console.error('authenticate failed! Token signature mismatch')
             return res.status(403).json({ success: false, error: 'Authentication failed! Token signature mismatch' })
         }
@@ -94,7 +109,12 @@ const auth = async (req, res, next) => {
         return res.status(401).json({ success: false, error: errorTypes[error.message] || error?.message || error })
     }
 
-    const validation = await validationHandler?.[res.locals.accessor.accessRole]?.(res.locals.accessor)
+    const validationHandler = {
+        super: async () => validateSuperAdmin(res.locals.accessor),
+        user: async () => validateSuperAdmin(res.locals.accessor),
+    }
+
+    const validation = await validationHandler[res.locals.accessor.accessRole]()
 
     if (!validation?.success) {
         console.error('authenticate failed! Token validation failed')

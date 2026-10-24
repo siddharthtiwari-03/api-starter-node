@@ -19,12 +19,12 @@ const getAllUsers = async (req, res) => {
     // Get list of users
     const found = await User.find({
         where: {
-            ...applySearch(search, ['firstName', 'lastName', 'userDes', 'userEmail']),
-            ...applyRange(range, 'createdOn'),
+            ...applySearch(search, ['first_name', 'last_name', 'user_des', 'user_email']),
+            ...applyRange(range, 'created_on'),
             ...applyFilters(filters)
         },
         ...applyPagination({ page, pageSize }),
-        ...applySort(sort, 'firstName', 'userId'),
+        ...applySort(sort, 'first_name', 'user_id'),
         debug: 'query' // remove this in production
     })
 

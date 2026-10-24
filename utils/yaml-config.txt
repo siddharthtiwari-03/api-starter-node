@@ -1,0 +1,11 @@
+services:
+  web-app:
+    image: ${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG:-latest}
+    container_name: my-node-app
+    restart: unless-stopped
+    ports:
+      - "${HOST_PORT:-80}:${CONTAINER_PORT:-3000}"
+    # No command override needed here because the production Dockerfile stage 
+    # already defaults to ["npm", "start"]
+    env_file:
+      - .env

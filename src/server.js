@@ -28,7 +28,7 @@ const cluster = require('cluster')
 
 const appRouter = require('./app.router')
 const { envs } = require('./services/environment.service')
-const { auth } = require('./services/auth.service')
+// const { auth } = require('./services/auth.service')
 const numOfCores = os.availableParallelism()
 const allowedOrigins = [`http://localhost:${envs.port}`]
 
@@ -71,10 +71,10 @@ if (envs.use_cluster_module === 'true' && cluster.isPrimary) {
     app.use(express.json())
     app.use(express.urlencoded({ extended: true }))
     app.use(cors({ origin: allowedOrigins, credentials: true })) // Improved CORS
-    app.options('*', cors())
+    app.options('*any', cors())
     app.use(helmet())
     app.use(compression())
-    app.use(auth)
+    // app.use(auth)
     // Middlewares end here
 
     // Route mappings start here
@@ -85,7 +85,7 @@ if (envs.use_cluster_module === 'true' && cluster.isPrimary) {
     // Route mappings end here
 
     // Error handling middleware (Place here, before route mapping)
-    app.use((err, req, res, next) => {
+    app.use((err, req, res, _next) => {
         console.error(err.stack)
         res.status(500).send('Something broke!')
     })

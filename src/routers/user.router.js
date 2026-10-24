@@ -1,19 +1,25 @@
-// self only: login, forgot-password
-const privateRoutes = require('express').Router({ mergeParams: true })
-// non editable shared for parent and sibling level: get listing
-const protectedRoutes = require('express').Router({ mergeParams: true })
-// shared editable with parent and self: PUT, Patch, get by ID
-const sharedRoutes = require('express').Router({ mergeParams: true })
-// parent only: POST, DELETE
-const reservedRoutes = require('express').Router({ mergeParams: true })
+const { Router } = require('express')
 
-const { createUser } = require('./create-user.post')
-const { getAllUsers } = require('./list-users.get')
-const { updateUser } = require('./update-user.put')
-const { getUserInfo } = require('./user-info.get')
-const { userLogin } = require('./user-login.post')
-const { deleteUser } = require('./user.delete')
-const { patchUser } = require('./user.patch')
+// self only: login, forgot-password
+const privateRoutes = Router({ mergeParams: true })
+// non editable shared for parent and sibling level: get listing
+const protectedRoutes = Router({ mergeParams: true })
+// shared editable with parent and self: PUT, Patch, get by ID
+const sharedRoutes = Router({ mergeParams: true })
+// parent only: POST, DELETE
+const reservedRoutes = Router({ mergeParams: true })
+
+const { createUser } = require('../handlers/user/create-user.post')
+const { getAllUsers } = require('../handlers/user/list-users.get')
+const { updateUser } = require('../handlers/user/update-user.put')
+const { getUserInfo } = require('../handlers/user/user-info.get')
+const { userLogin } = require('../handlers/user/user-login.post')
+const { deleteUser } = require('../handlers/user/user.delete')
+const { registerParam } = require('../services/helper.service')
+
+reservedRoutes.param('user_id', registerParam())
+sharedRoutes.param('user_id', registerParam())
+
 
 /**
  * @swagger
@@ -23,7 +29,7 @@ const { patchUser } = require('./user.patch')
  *       type: object
  *       properties:
  *         id:
- *           type: integer
+ *           type: string
  *           description: The user ID.
  *         name:
  *           type: string
@@ -116,7 +122,7 @@ reservedRoutes.post('/', createUser)
 
 /**
  * @swagger
- * /users/{userID}:
+ * /users/{user_id}:
  *   delete:
  *     tags:
  *       - User
@@ -126,20 +132,20 @@ reservedRoutes.post('/', createUser)
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: userID
+ *         name: user_id
  *         schema:
- *           type: integer
+ *           type: string
  *         required: true
  *         description: The ID of the user to delete.
  *     responses:
  *       200:
  *         description: User deleted successfully.
  *       400:
- *         description: Invalid userID or Bad Request.
+ *         description: Invalid user_id or Bad Request.
  *       404:
  *         description: User not found.
  */
-reservedRoutes.delete('/:userID(\\d+)', deleteUser)
+reservedRoutes.delete('/:user_id', deleteUser)
 
 /**
  * @swagger
@@ -168,7 +174,7 @@ privateRoutes.post('/login', userLogin)
 
 /**
  * @swagger
- * /users/{userID}:
+ * /users/{user_id}:
  *   get:
  *     tags:
  *       - User Info
@@ -176,22 +182,22 @@ privateRoutes.post('/login', userLogin)
  *     summary: Get User Info
  *     parameters:
  *       - in: path
- *         name: userID
+ *         name: user_id
  *         required: true
  *         description: The ID of the user to retrieve.
  *         schema:
- *           type: integer
+ *           type: string
  *     responses:
  *       200:
  *         description: User info found successfully
  *       400:
- *         description: Invalid userID
+ *         description: Invalid user_id
  */
-sharedRoutes.get('/:userID(\\d+)', getUserInfo)
+sharedRoutes.get('/:user_id', getUserInfo)
 
 /**
  * @swagger
- * /users/{userID}:
+ * /users/{user_id}:
  *   put:
  *     tags:
  *       - User Update
@@ -201,11 +207,11 @@ sharedRoutes.get('/:userID(\\d+)', getUserInfo)
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: userID
+ *         name: user_id
  *         required: true
  *         description: The ID of the user to update.
  *         schema:
- *           type: integer
+ *           type: string
  *     requestBody:
  *       required: true
  *       content:
@@ -218,11 +224,11 @@ sharedRoutes.get('/:userID(\\d+)', getUserInfo)
  *       400:
  *         description: Bad Request
  */
-sharedRoutes.put('/:userID(\\d+)', updateUser)
+sharedRoutes.put('/:user_id', updateUser)
 
 /**
  * @swagger
- * /users/{userID}:
+ * /users/{user_id}:
  *   patch:
  *     tags:
  *       - User Patch
@@ -232,11 +238,11 @@ sharedRoutes.put('/:userID(\\d+)', updateUser)
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: userID
+ *         name: user_id
  *         required: true
  *         description: The ID of the user to patch.
  *         schema:
- *           type: integer
+ *           type: string
  *     requestBody:
  *       required: true
  *       content:
@@ -249,7 +255,7 @@ sharedRoutes.put('/:userID(\\d+)', updateUser)
  *       400:
  *         description: Bad Request
  */
-sharedRoutes.patch('/:userID(\\d+)', patchUser)
+sharedRoutes.patch('/:user_id', updateUser)
 
 const userRouter = { privateRoutes, sharedRoutes, protectedRoutes, reservedRoutes }
 

@@ -14,13 +14,17 @@ const envs = Object.freeze({
 
     salt_rounds: parseInt(process.env.SALT_ROUNDS) || 10,
 
+    fcm_credential_json: process.env.FCM_CREDENTIAL_JSON || '',
+
+    uuid_regex: /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\$/i,
+
     open_api: {
         doc_mode: process.env.OPEN_API_DOC_MODE || "false",
     },
 
     jwt: {
-        accessor_secret: process.env.JWT_ACCESSOR_SECRET,
-        refresher_secret: process.env.JWT_REFRESHER_SECRET,
+        accessor_secret: process.env.JWT_ACCESSOR_SECRET || '',
+        refresher_secret: process.env.JWT_REFRESHER_SECRET || '',
         refresher_ttl: process.env.JWT_REFRESHER_TTL || '90',
         accessor_ttl: process.env.JWT_ACCESSOR_TTL || '15m',
     },
