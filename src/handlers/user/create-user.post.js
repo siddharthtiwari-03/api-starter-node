@@ -1,8 +1,7 @@
-const { User } = require('../../models/user.class')
-const { prettifyError } = require('../../services/helper.service')
+import { User } from '../../models/user.class.js'
+import { prettifyError } from '../../services/helper.service.js'
 
-
-const createUser = async (req, res) => {
+export const createUser = async (req, res) => {
     const data = req.body
     console.info('create user invoked!', data)
     const saved = await User.save({ data })
@@ -15,5 +14,3 @@ const createUser = async (req, res) => {
     console.info('User created successfully!')
     return res.status(201).json(saved)
 }
-
-module.exports = { createUser }

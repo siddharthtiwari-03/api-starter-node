@@ -1,9 +1,9 @@
 // External dependencies start here
 
-const { PutObjectCommand, GetObjectCommand } = require("@aws-sdk/client-s3")
-const { getS3Client } = require("./aws.service")
-const { getSignedUrl } = require("@aws-sdk/s3-request-presigner")
-const { envs } = require("./environment.service")
+import { PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3"
+import { getS3Client } from "./aws.service.js"
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
+import { envs } from "./environment.service.js"
 
 // External dependencies end here
 
@@ -23,7 +23,7 @@ const Bucket = envs.aws.s3.bucket_name
  * @returns {string} dynamically generated pre-signed URL
  * @author Siddharth Tiwari
  */
-const generate_put_url = async ({ ContentType, Key }) => {
+export const generate_put_url = async ({ ContentType, Key }) => {
     const putCommand = new PutObjectCommand({
         Bucket,
         ContentType,
@@ -52,7 +52,7 @@ const generate_put_url = async ({ ContentType, Key }) => {
  * @returns {string} dynamically generated pre-signed URL
  * @author Siddharth Tiwari
  */
-const generate_get_url = async ({ Key }) => {
+export const generate_get_url = async ({ Key }) => {
     console.log('generate_get_url invoked', Key)
 
     const client = getS3Client()
@@ -70,5 +70,3 @@ const generate_get_url = async ({ Key }) => {
         return { success: false, error: error.message || error }
     }
 }
-
-module.exports = { generate_put_url, generate_get_url }

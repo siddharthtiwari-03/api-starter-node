@@ -1,16 +1,11 @@
-// External dependencies start here
-const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
-// External dependencies end here
+import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
 
-// Internal dependencies start here
-const { User } = require('../../models/user.class')
-const { prettifyError } = require('../../services/helper.service')
-const { envs } = require('../../services/environment.service')
-// Internal dependencies end here
+import { User } from '../../models/user.class.js'
+import { prettifyError } from '../../services/helper.service.js'
+import { envs } from '../../services/environment.service.js'
 
-
-const userLogin = async (req, res) => {
+export const userLogin = async (req, res) => {
 
     // get login ID and password from body
     const { loginID, password, keepSigned } = req.body
@@ -65,5 +60,3 @@ const userLogin = async (req, res) => {
     // send response with token and limited user data
     res.status(200).json({ success: true, access_token, account: user })
 }
-
-module.exports = { userLogin }

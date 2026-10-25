@@ -1,4 +1,4 @@
-const swaggerJSDoc = require('swagger-jsdoc');
+import swaggerJSDoc from 'swagger-jsdoc'
 
 const swaggerDefinition = {
     openapi: '3.0.0', // This is the version of OpenAPI that swagger-ui-express uses
@@ -20,6 +20,4 @@ const options = {
     apis: ['./src/routers/**/*.js'], // Files containing API annotations
 };
 
-const swaggerSpec = swaggerJSDoc(options);
-
-module.exports = swaggerSpec;
+export const swaggerSpec = swaggerJSDoc(options)

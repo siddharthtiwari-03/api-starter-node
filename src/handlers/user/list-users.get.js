@@ -1,9 +1,7 @@
-// Internal dependencies start here
-const { User } = require('../../models/user.class')
-const { prettifyError, applyPagination, applySort, applySearch, applyRange, applyFilters } = require('../../services/helper.service')
-// Internal dependencies end here
+import { User } from '../../models/user.class.js'
+import { prettifyError, applyPagination, applySort, applySearch, applyRange, applyFilters } from '../../services/helper.service.js'
 
-const getAllUsers = async (req, res) => {
+export const getAllUsers = async (req, res) => {
 
     /**
      * @type {object}
@@ -35,5 +33,3 @@ const getAllUsers = async (req, res) => {
 
     return res.status(200).json(found) // Return the users list
 }
-
-module.exports = { getAllUsers }

@@ -1,8 +1,8 @@
-const jwt = require('jsonwebtoken')
+import jwt from 'jsonwebtoken'
 
-const { debugRequest } = require("./helper.service")
-const { envs } = require('./environment.service')
-const { validateSuperAdmin } = require('../validators/super-admin.validator')
+import { debugRequest } from "./helper.service.js"
+import { envs } from './environment.service.js'
+import { validateSuperAdmin } from '../validators/super-admin.validator.js'
 
 const skipUrls = [/\/login|\/login2|\/signup/, /\/hash|\/secret/, /\/test/, /\/forgot-password/, /\/export/, /\/health/, /\/health-check/]
 
@@ -15,7 +15,7 @@ const skipUrls = [/\/login|\/login2|\/signup/, /\/hash|\/secret/, /\/test/, /\/f
  * @returns
  * @author Siddharth Tiwari
  */
-const auth = async (req, res, next) => {
+export const auth = async (req, res, next) => {
     console.info('auth invoked!')
 
     // Bypass auth for specific urls
@@ -123,6 +123,3 @@ const auth = async (req, res, next) => {
 
     next()
 }
-
-
-module.exports = { auth }

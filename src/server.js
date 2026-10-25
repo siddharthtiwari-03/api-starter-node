@@ -1,33 +1,34 @@
 // External dependencies start here
-require('dotenv').config()
+import dotenv from 'dotenv'
 
-// Include env files depending on the 'NODE_ENV'
+dotenv.config()
 
-if (process.env.NODE_ENV === 'dev')
-    require('dotenv').config({ path: ['.env.dev'] })
-else if (process.env.NODE_ENV === 'prod')
-    require('dotenv').config({ path: ['.env.prod'] })
-else if (process.env.NODE_ENV === 'stage')
-    require('dotenv').config({ path: ['.env.stage'] })
+// Include env files depending on the 'APP_ENV'
 
+if (process.env.APP_ENV === 'dev')
+    dotenv.config({ path: ['.env.dev'], quiet: true, override: true })
+else if (process.env.APP_ENV === 'prod')
+    dotenv.config({ path: ['.env.prod'], quiet: true, override: true })
+else if (process.env.APP_ENV === 'stage')
+    dotenv.config({ path: ['.env.stage'], quiet: true, override: true })
 
-const express = require('express')
-const cors = require('cors')
-const helmet = require('helmet')
-const compression = require('compression')
+import express from 'express'
+import cors from 'cors'
+import helmet from 'helmet'
+import compression from 'compression'
 
-const swaggerUi = require('swagger-ui-express')
-const swaggerSpec = require('./swagger')
+import swaggerUi from 'swagger-ui-express'
+import { swaggerSpec } from './swagger.js'
 
-const os = require('os')
-const cluster = require('cluster')
+import os from 'os'
+import cluster from 'cluster'
 
 // External dependencies end here
 
 // Internal dependencies start here
 
-const appRouter = require('./app.router')
-const { envs } = require('./services/environment.service')
+import { appRouter } from './app.router.js'
+import { envs } from './services/environment.service.js'
 // const { auth } = require('./services/auth.service')
 const numOfCores = os.availableParallelism()
 const allowedOrigins = [`http://localhost:${envs.port}`]

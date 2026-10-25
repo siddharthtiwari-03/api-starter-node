@@ -1,7 +1,7 @@
-const mysql = require('mysql2/promise')
-const { envs } = require('./environment.service')
+import mysql from 'mysql2/promise'
+import { envs } from './environment.service.js'
 
-const pool = mysql.createPool({
+export const pool = mysql.createPool({
     host: envs.db.host,
     user: envs.db.user,
     password: envs.db.pass,
@@ -12,5 +12,3 @@ const pool = mysql.createPool({
     connectTimeout: 10000,
     insecureAuth: true
 })
-
-module.exports = pool

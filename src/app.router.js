@@ -1,21 +1,16 @@
-const router = require('express').Router({ mergeParams: true })
+import { Router } from 'express'
 
-// Internal dependencies start here
 
-const { globalRouter } = require('./routers/_global.router')
-const { userRouter } = require('./routers/user.router')
-const { superRouter } = require('./routers/super.router')
+import { globalRouter } from './routers/_global.router.js'
+import { userRouter } from './routers/user.router.js'
+import { superRouter } from './routers/super.router.js'
 
-// Internal dependencies end here
 
-// routes mapping start here
 
-router.use('/super', superRouter.privateRoutes)
+export const appRouter = Router({ mergeParams: true })
 
-router.use('/users', userRouter.privateRoutes, userRouter.sharedRoutes)
+appRouter.use('/super', superRouter.privateRoutes)
 
-router.use(globalRouter)
+appRouter.use('/users', userRouter.privateRoutes, userRouter.sharedRoutes)
 
-// routes mapping end here
-
-module.exports = router
+appRouter.use(globalRouter)

@@ -1,10 +1,9 @@
-const { S3Client } = require("@aws-sdk/client-s3")
-const { SQSClient } = require('@aws-sdk/client-sqs')
-const { BedrockRuntimeClient } = require('@aws-sdk/client-bedrock-runtime')
-const { envs } = require("./environment.service")
+import { S3Client } from "@aws-sdk/client-s3"
+import { SQSClient } from '@aws-sdk/client-sqs'
+import { BedrockRuntimeClient } from '@aws-sdk/client-bedrock-runtime'
+import { envs } from "./environment.service.js"
 
 /**
- * @namespace awsClients
  * @description A frozen object to hold singleton instances of various AWS clients.
  * This prevents the object itself from being modified, ensuring that clients are
  * only initialized once and are always accessed in a controlled manner.
@@ -15,9 +14,9 @@ const { envs } = require("./environment.service")
  * @type {Readonly<Object>}
  * @author Siddharth Tiwari
  */
-const awsClients = Object.freeze({ s3Client: { get: null, put: null, delete: null, all: null }, s3ClientGet: null, s3ClientPut: null, snsClient: null, sqsClient: null, bedrockClient: { embeddings: null, chat: null } })
+export const awsClients = Object.freeze({ s3Client: { get: null, put: null, delete: null, all: null }, s3ClientGet: null, s3ClientPut: null, snsClient: null, sqsClient: null, bedrockClient: { embeddings: null, chat: null } })
 
-const permissions = Object.freeze({ get: true, put: true, delete: true, all: true })
+export const permissions = Object.freeze({ get: true, put: true, delete: true, all: true })
 
 /**
  * @function getS3Client
@@ -26,7 +25,7 @@ const permissions = Object.freeze({ get: true, put: true, delete: true, all: tru
  * @author Siddharth Tiwari
  * @returns {import("@aws-sdk/client-s3").S3Client} The singleton instance of the S3 Client
  */
-const getS3Client = (permission = 'get') => {
+export const getS3Client = (permission = 'get') => {
 
     if (!permissions?.[permission]) throw new Error(`Invalid S3 client permission: ${permission}`)
 
@@ -53,7 +52,7 @@ const getS3Client = (permission = 'get') => {
  * @author Siddharth Tiwari
  * @returns {import("@aws-sdk/client-sqs").SQSClient} The singleton instance of the SQS Client
  */
-const getSQSClient = () => {
+export const getSQSClient = () => {
 
     if (awsClients.sqsClient) return { success: true, client: awsClients.sqsClient }
 
@@ -75,7 +74,7 @@ const getSQSClient = () => {
  * @author Siddharth Tiwari
  * @returns {import("@aws-sdk/client-bedrock-runtime").BedrockRuntimeClient} The singleton instance of the BedrockRuntimeClient
  */
-const getBedrockClient = (type = null, awsRegion = null, totalAttempts = 2) => {
+export const getBedrockClient = (type = null, awsRegion = null, totalAttempts = 2) => {
 
     type = type || 'embeddings'
 
@@ -91,5 +90,3 @@ const getBedrockClient = (type = null, awsRegion = null, totalAttempts = 2) => {
     })
     return { success: true, client: awsClients.bedrockClient[type] }
 }
-
-module.exports = { getS3Client, getSQSClient, getBedrockClient }

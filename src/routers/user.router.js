@@ -1,4 +1,4 @@
-const { Router } = require('express')
+import { Router } from 'express'
 
 // self only: login, forgot-password
 const privateRoutes = Router({ mergeParams: true })
@@ -9,13 +9,13 @@ const sharedRoutes = Router({ mergeParams: true })
 // parent only: POST, DELETE
 const reservedRoutes = Router({ mergeParams: true })
 
-const { createUser } = require('../handlers/user/create-user.post')
-const { getAllUsers } = require('../handlers/user/list-users.get')
-const { updateUser } = require('../handlers/user/update-user.put')
-const { getUserInfo } = require('../handlers/user/user-info.get')
-const { userLogin } = require('../handlers/user/user-login.post')
-const { deleteUser } = require('../handlers/user/user.delete')
-const { registerParam } = require('../services/helper.service')
+import { createUser } from '../handlers/user/create-user.post.js'
+import { getAllUsers } from '../handlers/user/list-users.get.js'
+import { updateUser } from '../handlers/user/update-user.put.js'
+import { getUserInfo } from '../handlers/user/user-info.get.js'
+import { userLogin } from '../handlers/user/user-login.post.js'
+import { deleteUser } from '../handlers/user/user.delete.js'
+import { registerParam } from '../services/helper.service.js'
 
 reservedRoutes.param('user_id', registerParam())
 sharedRoutes.param('user_id', registerParam())
@@ -257,6 +257,4 @@ sharedRoutes.put('/:user_id', updateUser)
  */
 sharedRoutes.patch('/:user_id', updateUser)
 
-const userRouter = { privateRoutes, sharedRoutes, protectedRoutes, reservedRoutes }
-
-module.exports = { userRouter }
+export const userRouter = { privateRoutes, sharedRoutes, protectedRoutes, reservedRoutes }

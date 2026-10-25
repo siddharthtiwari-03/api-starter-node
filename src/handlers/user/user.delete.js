@@ -1,7 +1,7 @@
-const { User } = require("../../models/user.class")
-const { prettifyError } = require("../../services/helper.service")
+import { User } from "../../models/user.class.js"
+import { prettifyError } from "../../services/helper.service.js"
 
-const deleteUser = async (req, res) => {
+export const deleteUser = async (req, res) => {
     const { user_id } = req.params
     console.info('delete user invoked!', user_id)
 
@@ -21,5 +21,3 @@ const deleteUser = async (req, res) => {
     console.info('User deleted successfully!')
     return res.status(200).json({ success: true, message: 'User deleted successfully' }) // Return success message
 }
-
-module.exports = { deleteUser }

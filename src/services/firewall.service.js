@@ -1,5 +1,3 @@
-// @ts-check
-
 /**
  * @type {Record<string, any>}
  */
@@ -31,7 +29,7 @@ const accessControls = Object.freeze({
  * @returns
  * @author Siddharth Tiwari
  */
-const checkAccess = resource => {
+export const checkAccess = resource => {
 
     /**
      * @param {import("express").Request} req
@@ -52,5 +50,3 @@ const checkAccess = resource => {
         return next()
     }
 }
-
-module.exports = { checkAccess }

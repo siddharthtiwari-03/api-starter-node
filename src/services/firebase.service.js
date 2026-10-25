@@ -1,10 +1,11 @@
 // @ts-check
-const { initializeApp, cert } = require("firebase-admin/app")
-const { getMessaging } = require("firebase-admin/messaging")
-const { envs } = require("./environment.service")
+import { initializeApp, cert } from "firebase-admin/app"
+import { getMessaging } from "firebase-admin/messaging"
 
-const fs = require('node:fs')
-const path = require('node:path')
+import fs from 'node:fs'
+import path from 'node:path'
+
+import { envs } from "./environment.service.js"
 
 
 const INVALID_TOKEN_CODES = new Set([
@@ -22,17 +23,14 @@ const MAX_TOKENS_PER_CALL = 500
 
 const MAX_MESSAGES_PER_BATCH = 500
 
-let fcmApp
-
 try {
-
 
     // this is Important
     const configPath = path.resolve(envs.fcm_credential_json)
     const firebaseJson = JSON.parse(fs.readFileSync(configPath, 'utf8'))
 
-    fcmApp = initializeApp({ credential: cert(firebaseJson) })
-    console.info('Firebase Admin SDK initialized successfully!', fcmApp.name)
+    initializeApp({ credential: cert(firebaseJson) })
+    console.info('Firebase Admin SDK initialized successfully!')
 } catch (/** @type {any} */ err) {
     console.error('FATAL: failed to initialize Firebase Admin SDK', err.message)
     throw err
@@ -45,7 +43,7 @@ try {
  * @param {number} [retries=1]
  * @returns {Promise<{success:boolean, result?:*, error?:string, code?:string, invalidTokens: string[], failedTokens?: string[] }>}
  */
-const pushFCM = async (payLoad, retries = 1) => {
+export const pushFCM = async (payLoad, retries = 1) => {
     /**
      * @type {any[]}
      */
@@ -119,7 +117,7 @@ const pushFCM = async (payLoad, retries = 1) => {
  * @param {any[]} messages
  * @returns {Promise<{success:boolean, error?:string, code?:string, results:{topic?:string, success:boolean, error?:{code:string, message:string}}[], successCount?:number, failureCount?:number}>}
  */
-const pushFCMBatch = async (messages) => {
+export const pushFCMBatch = async (messages) => {
     if (!messages.length) return { success: true, results: [], successCount: 0, failureCount: 0 }
 
     if (messages.length > MAX_MESSAGES_PER_BATCH) {
@@ -153,7 +151,7 @@ const pushFCMBatch = async (messages) => {
  * @param {string[]} topics
  * @returns
  */
-const subscribeToTopics = async (deviceToken, topics) => {
+export const subscribeToTopics = async (deviceToken, topics) => {
 
     console.info(`subscribing device to topics`, deviceToken, topics)
 
@@ -189,7 +187,7 @@ const subscribeToTopics = async (deviceToken, topics) => {
  * @param {string[]} topics
  * @returns
  */
-const unsubscribeFromTopics = async (deviceToken, topics) => {
+export const unsubscribeFromTopics = async (deviceToken, topics) => {
 
     console.info(`unsubscribing device from topics`, deviceToken, topics)
 
@@ -219,6 +217,3 @@ const unsubscribeFromTopics = async (deviceToken, topics) => {
 
     return { success: failed.length === 0, unsubscribed, failed }
 }
-
-
-module.exports = { pushFCM, pushFCMBatch, subscribeToTopics, unsubscribeFromTopics }

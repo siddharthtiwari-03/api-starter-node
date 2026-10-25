@@ -1,5 +1,5 @@
-const { generate_get_url } = require("./aws-s3.service")
-const { envs } = require("./environment.service")
+import { generate_get_url } from "./aws-s3.service.js"
+import { envs } from "./environment.service.js"
 
 /**
  * Helps skip a middleware for any matching routes
@@ -10,7 +10,7 @@ const { envs } = require("./environment.service")
  * @returns {*} context if 'middleware' function will be executed or skipped
  * @author Siddharth Tiwari
  */
-const skipFor = (middleware, paths) => (req, res, next) => paths.some(element => req.path.includes(element)) ? next() : middleware(req, res, next)
+export const skipFor = (middleware, paths) => (req, res, next) => paths.some(element => req.path.includes(element)) ? next() : middleware(req, res, next)
 
 /**
  * This function generates random code
@@ -20,7 +20,7 @@ const skipFor = (middleware, paths) => (req, res, next) => paths.some(element =>
  * @returns {string} generated alpha numeric code
  * @author Siddharth Tiwari
  */
-function generateCode(length) {
+export function generateCode(length) {
     const alphaNum = ['a', 'A', 'b', 'B', 'c', 'C', 'd', 'D', 'e', 'E', 'f', 'F', 'g', 'G', 'h', 'H', 'i', 'I', 'j', 'J', 'k', 'K', 'l', 'L', 'm', 'M', 'n', 'N', 'o', 'O', 'p', 'P', 'q', 'Q', 'r', 'R', 's', 'S', 't', 'T', 'u', 'U', 'v', 'V', 'w', 'W', 'x', 'X', 'y', 'Y', 'z', 'Z', '0', 1, 2, 3, 4, 5, 6, 7, 8, 9]
     let code = ''
 
@@ -39,7 +39,7 @@ function generateCode(length) {
  * @returns {object} returns the 'findObj' received in the parameter
  * @author Siddharth Tiwari
  */
-const applyPagination = (page, pageSize) => {
+export const applyPagination = (page, pageSize) => {
     const limit = parseInt(pageSize)
     const pg = parseInt(page)
     return ({ ...(!isNaN(limit) && { limit }), ...(!isNaN(limit) && !isNaN(pg) && { offset: (pg - 1) * limit }) })
@@ -52,7 +52,7 @@ const applyPagination = (page, pageSize) => {
  * @param {Array} columns search text in columns
  * @returns 
  */
-const applySearch = (search, columns = []) => {
+export const applySearch = (search, columns = []) => {
     if (!search) return {}
     const or = []
     for (let i = 0; i < columns.length; i++) {
@@ -61,7 +61,7 @@ const applySearch = (search, columns = []) => {
     return { or }
 }
 
-const applySort = (sort, columnName, tieBreaker = '', dateColumn = 'createdOn') => {
+export const applySort = (sort, columnName, tieBreaker = '', dateColumn = 'createdOn') => {
     const orderBy = {}
     switch (sort) {
         case 'az':
@@ -84,7 +84,7 @@ const applySort = (sort, columnName, tieBreaker = '', dateColumn = 'createdOn') 
     }
 }
 
-const applyRange = (range, column) => {
+export const applyRange = (range, column) => {
     switch (range) {
         case 'week':
             return {
@@ -138,7 +138,7 @@ const applyRange = (range, column) => {
     }
 }
 
-const applyFilters = (filters) => {
+export const applyFilters = (filters) => {
     const condition = {}
     const entries = Object.entries(filters)
     for (let i = 0; i < entries.length; i++) {
@@ -157,7 +157,7 @@ const applyFilters = (filters) => {
  * @returns {boolean} boolean representing if the string matches the pattern or not
  * @author Siddharth Tiwari
  */
-const matchRegex = (str, pattern = /[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[89AB][a-f0-9]{3}-[a-f0-9]{12}/i) => RegExp(pattern).exec(`'${str}'`)
+export const matchRegex = (str, pattern = /[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[89AB][a-f0-9]{3}-[a-f0-9]{12}/i) => RegExp(pattern).exec(`'${str}'`)
 
 /**
  * Matches the request parameters with regex pattern
@@ -168,7 +168,7 @@ const matchRegex = (str, pattern = /[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[89AB][a
  * @returns {*} context if the request handler will be accessed or skipped
  * @author Siddharth Tiwari
  */
-const matchParamRegex = (params = [], pattern) => {
+export const matchParamRegex = (params = [], pattern) => {
     return (req, res, next) => {
 
         for (const param of params) {
@@ -187,7 +187,7 @@ const matchParamRegex = (params = [], pattern) => {
     }
 }
 
-const registerParam = (pattern = envs.uuid_regex) => (req, res, next, value) => pattern.test(value) ? next() : next('route')
+export const registerParam = (pattern = envs.uuid_regex) => (req, res, next, value) => pattern.test(value) ? next() : next('route')
 
 /**
  * prettifies the error
@@ -197,7 +197,7 @@ const registerParam = (pattern = envs.uuid_regex) => (req, res, next, value) => 
  * @returns {{success:false, error:string}} simplified error acknowledgement along with the error message
  * @author Siddharth Tiwari
  */
-const prettifyError = e => ({ success: false, error: e?.error?.sqlMessage || e?.error?.message || e?.error })
+export const prettifyError = e => ({ success: false, error: e?.error?.sqlMessage || e?.error?.message || e?.error })
 
 /**
  * patches inline string values
@@ -209,7 +209,7 @@ const prettifyError = e => ({ success: false, error: e?.error?.sqlMessage || e?.
  * @returns {*} value that will be patched
  * @author Siddharth Tiwari
  */
-const patchInline = (condition, patchValue, elseValue = '') => (condition && condition != undefined) ? patchValue : elseValue
+export const patchInline = (condition, patchValue, elseValue = '') => (condition && condition != undefined) ? patchValue : elseValue
 
 /**
  * patches presigned URLs for files in AWS S3 bucket
@@ -219,7 +219,7 @@ const patchInline = (condition, patchValue, elseValue = '') => (condition && con
  * @returns {*} original object with patched signed URL + Cloudfront CDN URL
  * @author Siddharth Tiwari
  */
-const addPresignedURL = async (obj, columnName = 'coverURL', signedName = 'signedURL') => {
+export const addPresignedURL = async (obj, columnName = 'coverURL', signedName = 'signedURL') => {
     console.log('obj', obj)
     if (!obj) return
     if (obj[columnName] && !obj[columnName].includes('http')) {
@@ -231,25 +231,8 @@ const addPresignedURL = async (obj, columnName = 'coverURL', signedName = 'signe
     }
 }
 
-const debugRequest = (req) => {
+export const debugRequest = (req) => {
     console.log('Request Method:', req.method)
     console.log('Request URL:', req.originalUrl)
     console.log('Request agent:', req.headers['user-agent'])
-}
-
-module.exports = {
-    skipFor,
-    generateCode,
-    applyPagination,
-    applySearch,
-    applySort,
-    applyRange,
-    applyFilters,
-    matchRegex,
-    matchParamRegex,
-    prettifyError,
-    patchInline,
-    addPresignedURL,
-    debugRequest,
-    registerParam
 }

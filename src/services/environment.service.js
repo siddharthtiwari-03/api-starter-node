@@ -4,11 +4,13 @@
  * @description stores all environment variables from all .env files, provides easy access to all in a unified interface 'envs' to access them in 'read-only' mode
  * @readonly
  */
-const envs = Object.freeze({
+export const envs = Object.freeze({
 
     port: process.env.PORT || 5800,
 
-    mode: process.env.NODE_ENV || "dev", // dev | stage | prod
+    app_mode: process.env.APP_ENV || "dev", // dev | stage | prod
+
+    node_env: process.env.NODE_ENV || "development", // development | production
 
     use_cluster_module: process.env.USE_CLUSTER_MODULE,
 
@@ -95,5 +97,3 @@ const envs = Object.freeze({
         }
     }
 })
-
-module.exports = { envs }

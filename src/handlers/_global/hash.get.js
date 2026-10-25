@@ -1,8 +1,8 @@
 
-const bcrypt = require('bcrypt')
-const { envs } = require('../../services/environment.service')
+import bcrypt from 'bcrypt'
+import { envs } from '../../services/environment.service.js'
 
-const getHash = async (req, res) => {
+export const getHash = async (req, res) => {
     console.info('hashing raw input data')
     const { data } = req.params
 
@@ -16,5 +16,3 @@ const getHash = async (req, res) => {
     }
 
 }
-
-module.exports = { getHash }

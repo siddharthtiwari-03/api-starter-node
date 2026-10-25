@@ -1,9 +1,9 @@
 // eslint.config.js
-const js = require("@eslint/js")
-const globals = require("globals")
-const { defineConfig } = require("eslint/config")
+import js from "@eslint/js"
+import globals from "globals"
+import { defineConfig } from "eslint/config"
 
-module.exports = defineConfig([
+export default defineConfig([
   // 1. Load the recommended configuration globally for all JS variations
   js.configs.recommended,
 
@@ -11,7 +11,7 @@ module.exports = defineConfig([
   {
     files: ["**/*.{js,mjs,cjs}"],
     languageOptions: {
-      sourceType: "commonjs", // Safe default for Node.js CommonJS setups
+      sourceType: "module", // Safe default for Node.js CommonJS setups
       globals: {
         ...globals.node, // Securely loads all Node.js global variables
       },

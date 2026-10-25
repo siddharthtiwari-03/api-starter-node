@@ -1,9 +1,7 @@
-// Internal dependencies start here
-const { User } = require('../../models/user.class')
-const { prettifyError } = require('../../services/helper.service')
-// Internal dependencies end here
+import { User } from '../../models/user.class.js'
+import { prettifyError } from '../../services/helper.service.js'
 
-const getUserInfo = async (req, res) => {
+export const getUserInfo = async (req, res) => {
     const { user_id } = req.params
     console.info('get user info invoked!', user_id)
 
@@ -23,5 +21,3 @@ const getUserInfo = async (req, res) => {
 
     return res.status(200).json({ success: true, result: user }) // Return the updated user data
 }
-
-module.exports = { getUserInfo }

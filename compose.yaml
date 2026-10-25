@@ -31,10 +31,6 @@ services:
         - path: package.json
           action: rebuild
     # volumes:
-    #   - .:/app
-      # This anonymous volume prevents the local node_modules from being
-      # mounted over the one built inside the container.
-      # - /app/node_modules
     # depends_on:
     # redis:
     #   condition: service_healthy

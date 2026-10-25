@@ -1,16 +1,16 @@
 // External dependencies start here
-const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
+import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
 // External dependencies end here
 
 // Internal dependencies start here
-const { prettifyError } = require('../../services/helper.service')
-const { SuperAdmin } = require('../../models/super-admin.class')
-const { envs } = require('../../services/environment.service')
+import { prettifyError } from '../../services/helper.service.js'
+import { SuperAdmin } from '../../models/super-admin.class.js'
+import { envs } from '../../services/environment.service.js'
 // Internal dependencies end here
 
 
-const superLogin = async (req, res) => {
+export const superLogin = async (req, res) => {
 
     // get login ID and password from body
     const { loginID, password, keepSigned } = req.body
@@ -61,5 +61,3 @@ const superLogin = async (req, res) => {
     // send response with token and limited superAdmin data
     res.status(200).json({ success: true, access_token, account: superAdmin })
 }
-
-module.exports = { superLogin }

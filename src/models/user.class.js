@@ -1,16 +1,15 @@
 // @ts-check
-const { UnSQL } = require('unsql')
+import { UnSQL } from 'unsql'
 
 // get connection pool from your mysql provider service
-const pool = require('../services/db.service')
-const { envs } = require('../services/environment.service')
+import { pool } from '../services/db.service.js'
+import { envs } from '../services/environment.service.js'
 
 
 /**
- * @class User
  * @extends UnSQL
  */
-class User extends UnSQL {
+export class User extends UnSQL {
 
     /**
      * UnSQL config
@@ -25,5 +24,3 @@ class User extends UnSQL {
     }
 
 }
-
-module.exports = { User }
