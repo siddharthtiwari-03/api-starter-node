@@ -13,11 +13,11 @@ services:
       - .env
       - .env.dev
     environment:
-      NODE_ENV: development
-      APP_ENV: dev
-      PORT: 5800
+      NODE_ENV: ${NODE_ENV:-development}
+      APP_ENV: ${APP_ENV:-dev}
+      PORT: ${PORT:-5800}
     ports:
-      - 5800:5800
+      - "${PORT:-5800}:${PORT:-5800}"
     develop:
       watch:
         - path: .
@@ -63,11 +63,11 @@ services:
       - .env
       - .env.dev
     environment:
-      NODE_ENV: development
-      APP_ENV: dev
-      PORT: 5800
+      NODE_ENV: ${NODE_ENV:-development}
+      APP_ENV: ${APP_ENV:-dev}
+      PORT: ${PORT:-5800}
     ports:
-      - 5800:5800
+      - "${PORT:-5800}:${PORT:-5800}"
 
   server-prod:
     profiles: ['prod']
@@ -80,11 +80,11 @@ services:
       - .env
       - .env.prod
     environment:
-      NODE_ENV: production
-      APP_ENV: prod
-      PORT: 5800
+      NODE_ENV: ${NODE_ENV:-production}
+      APP_ENV: ${APP_ENV:-prod}
+      PORT: ${PORT:-5800}
     ports:
-      - 5800:5800
+      - "${PORT:-5800}:${PORT:-5800}"
 
   # redis:
   #   image: redis:latest

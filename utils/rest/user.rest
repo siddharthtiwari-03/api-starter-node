@@ -10,10 +10,14 @@ Content-Type: application/json
 
 ###
 
+GET {{rootURL}}/hash/123 HTTP/1.1
+
+###
+
 GET {{rootURL}}/secret HTTP/1.1
 
 ###
 
-GET {{rootURL}}/users/test HTTP/1.1
+GET {{rootURL}}/users/test?abc=123 HTTP/1.1
 
 ###

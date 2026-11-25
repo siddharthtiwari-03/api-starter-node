@@ -16,15 +16,19 @@ The project follows a clean, modern structure, centralizing all core application
 ```
 api-starter-kit
 ├──src/
+|  ├──handlers/
+|  |  ├──super-admin/
+|  |  |  └──super-admin-handlers
+|  |  └──other-handlers
 |  ├──models/
 |  |  └──model-classes
 |  ├──routers/
-|  |  ├──super-admin/
-|  |  |  └──super-admin-related-routes
-|  |  └──user/
-|  |  |  └──user-related-routes
-|  └──services/
+|  |  ├──_global-router-file
+|  |  └──other-router-files
+|  ├──services/
 |  |  └──helper-services
+|  └──validators/
+|     └──validator-files
 ├──utils/
 |  └──util-files
 ├──.env-files
@@ -70,6 +74,8 @@ You can also run this app using containerized docker, by using following command
 | Command                     | Description                                                        | Notes                                                                                                          |
 | --------------------------- | ------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------- |
 | npm run docker              | Build & Start All Services                                         | Runs docker compose up --build --force-recreate -d. Use this for initial setup or after configuration changes. |
+| npm run docker:local        | Start all services with 'src/' as the source                       |                                                                                                                |
+| npm run docker:dev          | Start all services with 'dist/' as the source                      |                                                                                                                |
 | npm run docker:down         | Gracefully Stop and Remove containers and networks.                |                                                                                                                |
 | npm run docker:down:volumes | Stop, Remove containers, networks, and volumes.                    | Caution: This deletes all associated data (e.g., database contents).                                           |
 | npm run docker:logs         | View live logs for the primary server container.                   |                                                                                                                |

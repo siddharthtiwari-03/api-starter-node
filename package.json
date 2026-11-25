@@ -58,7 +58,6 @@
     "@aws-sdk/client-s3": "^3.731.1",
     "@aws-sdk/client-sqs": "^3.731.1",
     "@aws-sdk/s3-request-presigner": "^3.731.1",
-    "ai": "^7.0.153",
     "bcrypt": "^6.0.0",
     "compression": "^1.8.1",
     "cors": "^2.8.6",
@@ -69,10 +68,11 @@
     "helmet": "^8.3.0",
     "jsonwebtoken": "^9.0.3",
     "mysql2": "^3.14.3",
+    "redis": "^6.4.0",
     "swagger-autogen": "^2.23.7",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
-    "unsql": "^2.5.3"
+    "unsql": "^2.6.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
