@@ -18,7 +18,7 @@ export const envs = Object.freeze({
 
     fcm_credential_json: process.env.FCM_CREDENTIAL_JSON || '',
 
-    uuid_regex: /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\$/i,
+    uuid_regex: /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i,
 
     open_api: {
         doc_mode: process.env.OPEN_API_DOC_MODE || "false",
