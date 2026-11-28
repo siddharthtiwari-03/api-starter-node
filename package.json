@@ -37,7 +37,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/siddharthtiwari-03/api-starter-node-docker.git"
+    "url": "git+https://github.com/siddharthtiwari-03/api-js-starter-kit.git"
   },
   "keywords": [
     "API",
@@ -50,9 +50,9 @@
   "author": "Siddharth Tiwari",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/siddharthtiwari-03/api-starter-node-docker/issues"
+    "url": "https://github.com/siddharthtiwari-03/api-js-starter-kit/issues"
   },
-  "homepage": "https://github.com/siddharthtiwari-03/api-starter-node-docker#readme",
+  "homepage": "https://github.com/siddharthtiwari-03/api-js-starter-kit#readme",
   "dependencies": {
     "@aws-sdk/client-bedrock-runtime": "^3.1148.0",
     "@aws-sdk/client-s3": "^3.731.1",
