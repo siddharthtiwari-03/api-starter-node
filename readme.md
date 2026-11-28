@@ -1,4 +1,4 @@
-# API starter kit: Node JS
+# API JS Starter Kit: Node JS
 
 This is a starter kit to speedup your initial setup time and provide a well structured backend for the better code readability and manageability.
 

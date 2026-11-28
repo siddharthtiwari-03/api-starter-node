@@ -1,5 +1,5 @@
 {
-  "name": "api-starter-node-docker",
+  "name": "api-js-starter-kit",
   "version": "2.9.1",
   "description": "Quick starter kit for API building with docker and compose",
   "main": "server.js",
